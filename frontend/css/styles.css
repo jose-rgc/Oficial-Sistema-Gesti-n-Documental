@@ -1,0 +1,303 @@
+/* General */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+/* Header */
+header.dashboard-header {
+    background-color: #007bff;
+    color: white;
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+header.dashboard-header a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header.dashboard-header a:hover {
+    text-decoration: underline;
+}
+
+/* Main Content */
+main.dashboard-main {
+    margin-top: 20px;
+    text-align: center;
+    width: 90%;
+    max-width: 800px;
+}
+
+main.dashboard-main table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+}
+
+main.dashboard-main table th, 
+main.dashboard-main table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+main.dashboard-main table th {
+    background-color: #007bff;
+    color: white;
+}
+
+main.dashboard-main table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+main.dashboard-main table tr:hover {
+    background-color: #ddd;
+}
+
+main.dashboard-main button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+main.dashboard-main button.edit-button {
+    background-color: #28a745;
+    color: white;
+}
+
+main.dashboard-main button.delete-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+main.dashboard-main button.edit-button:hover {
+    background-color: #218838;
+}
+
+main.dashboard-main button.delete-button:hover {
+    background-color: #c82333;
+}
+
+main.dashboard-main #addUserButton {
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+main.dashboard-main #addUserButton:hover {
+    background-color: #0056b3;
+}
+
+/* Modal */
+/* Modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal.show {
+    display: flex; /* Mostrar modal */
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-content form label {
+    font-weight: bold;
+}
+
+.modal-content form input,
+.modal-content form select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box; /* Asegura que padding no afecte el tamaño */
+    visibility: visible; /* Asegura que sea visible */
+    display: block; /* Forzar a que se muestre */
+}
+
+.modal-content form button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.modal-content form button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+}
+
+.modal-content form button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.modal-content form button[type="button"] {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.modal-content form button[type="button"]:hover {
+    background-color: #d11a2a;
+}
+
+#closeModal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #555;
+}
+
+#closeModal:hover {
+    color: #000;
+}
+#userModal .modal-content #userForm {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    background-color: #28a745;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+    z-index: 9999;
+}
+
+.notification.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.notification.error {
+    background-color: #dc3545;
+}
+main.dashboard-main table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+main.dashboard-main table th,
+main.dashboard-main table td {
+    padding: 12px;
+    text-align: center;
+    white-space: nowrap;
+}
+.modal {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+.document-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.document-row label {
+    font-weight: bold;
+}
+
+.document-row span {
+    color: gray;
+}
+.document-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.document-label {
+    flex: 2;
+    margin-right: 10px;
+    text-align: left;
+}
+
+select {
+    flex: 3;
+    margin-right: 10px;
+}
+
+input[type="file"] {
+    flex: 3;
+    margin-right: 10px;
+}
+
+.document-link {
+    flex: 2;
+    text-align: right;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}

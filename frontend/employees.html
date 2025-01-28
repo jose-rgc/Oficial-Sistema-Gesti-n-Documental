@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Funcionarios</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="dashboard-header">
+        <h1>Gestión de Funcionarios</h1>
+        <a href="dashboard.html" class="back-button">Volver al Dashboard</a>
+    </header>
+    <main class="dashboard-main">
+        <h2>Funcionarios Registrados</h2>
+        <button id="addEmployeeButton">Agregar Funcionario</button>
+        <table id="employeesTable">
+            <thead>
+                <tr>
+                    <th>CI</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Cargo</th>
+                    <th>Unidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los funcionarios se llenarán dinámicamente -->
+            </tbody>
+        </table>
+    </main>
+
+    <!-- Modal para Crear/Editar Funcionario -->
+    <div id="employeeModal" class="modal">
+        <div class="modal-content">
+            <button id="closeEmployeeModal">&times;</button>
+            <h2 id="employeeModalTitle">Editar Funcionario</h2>
+            <form id="employeeForm">
+                <label for="ci">CI:</label>
+                <input type="text" id="ci" name="ci" required>
+    
+                <label for="nombres">Nombres:</label>
+                <input type="text" id="nombres" name="nombres" required>
+    
+                <label for="apellidos">Apellidos:</label>
+                <input type="text" id="apellidos" name="apellidos" required>
+    
+                <label for="cargo">Cargo:</label>
+                <input type="text" id="cargo" name="cargo" required>
+    
+                <label for="unidad">Unidad:</label>
+                <input type="text" id="unidad" name="unidad" required>
+    
+                <label for="fechaInicioContrato">Fecha Inicio Contrato:</label>
+                <input type="date" id="fechaInicioContrato" name="fechaInicioContrato" required>
+    
+                <label for="fechaFinContrato">Fecha Fin Contrato:</label>
+                <input type="date" id="fechaFinContrato" name="fechaFinContrato">
+    
+                <button type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+    
+
+    <script src="js/employees.js"></script>
+</body>
+</html>

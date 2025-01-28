@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Documentos</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <h2>Gestión de Documentos - Funcionario</h2>
+    <p>CI: <span id="employeeCI"></span></p>
+    <p>Nombre: <span id="employeeName"></span></p>
+    <p>Apellido: <span id="employeeLastName"></span></p>
+    <p>Cargo: <span id="employeePosition"></span></p>
+    <h3>Documentos del Funcionario</h3>
+        <form id="documentsForm">
+            <div id="documentsList">
+                <!-- Aquí se generarán dinámicamente los documentos -->
+            </div>
+            <button id="saveChangesButton">Guardar Cambios</button>
+        </form>
+
+    <!-- Aquí enlazamos el archivo JS -->
+    <script src="js/upload-documents.js"></script>
+</body>
+</html>

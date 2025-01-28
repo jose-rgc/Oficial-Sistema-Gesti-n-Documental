@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="dashboard-header">
+        <h1>Gestión de Usuarios</h1>
+        <a href="dashboard.html" class="back-button">Volver al Dashboard</a>
+    </header>
+    <main class="dashboard-main">
+        <h2>Usuarios Registrados</h2>
+        <button id="addUserButton">Agregar Usuario</button>
+        <table id="usersTable">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se llenarán los usuarios dinámicamente -->
+            </tbody>
+        </table>
+    </main>
+
+    <!-- Modal para Crear/Editar Usuario -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <button id="closeModal">&times;</button>
+            <h2 id="modalTitle">Editar Usuario</h2>
+            <form id="userForm">
+                <label for="username">Usuario:</label>
+                <input type="text" id="username" name="username" required>
+    
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password">
+    
+                <label for="role">Rol:</label>
+                <select id="role" name="role" required>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                </select>
+    
+                <button type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+    <div id="notification" class="notification"></div>
+    <script src="js/users.js"></script>
+</body>
+</html>
