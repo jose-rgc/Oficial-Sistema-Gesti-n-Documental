@@ -84,6 +84,7 @@ function renderDocumentsList(documents) {
     documentTypes.forEach((docType) => {
         // Obtener el estado del documento desde los datos proporcionados
         let documentStatus = documents[docType]?.status || "No Presentado";
+        let documentDate = documents[docType]?.dueDate || "";
 
         // Si el estado es "Presento", mostrar "Subir" en el desplegable
         if (documentStatus === "Presento") {
@@ -115,6 +116,24 @@ function renderDocumentsList(documents) {
             select.appendChild(optionElement);
         });
 
+        // Crear el campo de fecha para "Pendiente"
+        const dateInput = document.createElement('input');
+        dateInput.type = "date";
+        dateInput.name = `${docType}-date`;
+        dateInput.style.display = (documentStatus === "Pendiente") ? "block" : "none";
+        dateInput.value = documentDate ? new Date(documentDate).toISOString().split('T')[0] : ""; // Formatear fecha
+
+        // Manejar cambios en el select para mostrar la fecha solo si es "Pendiente"
+        select.addEventListener('change', (event) => {
+            const selectedOption = event.target.value;
+
+            if (selectedOption === "Pendiente") {
+                dateInput.style.display = "block";
+            } else {
+                dateInput.style.display = "none";
+                dateInput.value = ""; // Resetear fecha si no es "Pendiente"
+            }
+        });
         const extraInput = document.createElement('input');
         extraInput.style.display = "none";
         extraInput.type = "file";
@@ -145,6 +164,7 @@ function renderDocumentsList(documents) {
 
         documentRow.appendChild(label);
         documentRow.appendChild(select);
+        documentRow.appendChild(dateInput);
         documentRow.appendChild(extraInput);
         documentsList.appendChild(documentRow);
     });
@@ -170,6 +190,11 @@ document.getElementById('saveChangesButton').addEventListener('click', async (ev
         const fileInput = row.querySelector(`input[name="${documentType}-file"]`);
         const file = fileInput?.files[0];
         const isFileUploaded = row.querySelector('a'); // Enlace del documento subido
+
+        // Obtener la fecha si el estado es "Pendiente"
+        const dueDateInput = row.querySelector(`input[name="${documentType}-date"]`);
+        const dueDate = (status === "Pendiente" && dueDateInput?.value) ? new Date(dueDateInput.value).toISOString() : null;
+        console.log(`📌 Tipo: ${documentType}, Estado: ${status}, Fecha capturada correctamente: ${dueDate}`);
 
         // Si el estado es "Subir" y no hay un archivo ya subido
         if (status === "Subir" && !file && !isFileUploaded) {
@@ -207,8 +232,14 @@ document.getElementById('saveChangesButton').addEventListener('click', async (ev
         // Agregar el estado a `updatedDocuments` si no es "Subir"
         if (status !== "Subir") {
             updatedDocuments[documentType] = { status };
+            
+            // Si el estado es "Pendiente", guardar la fecha de vencimiento
+            if (status === "Pendiente") {
+                updatedDocuments[documentType].dueDate = dueDate ? dueDate : null; 
+            }
         }
     });
+    console.log("📤 Datos enviados al backend:", updatedDocuments); // 🟢 Verifica si dueDate está aquí
 
     try {
         // Enviar los estados de documentos que no son "Subir"

@@ -161,7 +161,7 @@ router.post('/:id', authenticateToken, upload.array('files', 20), async (req, re
 router.post('/:id/documents', authenticateToken, async (req, res) => {
     const { id } = req.params;
     const updatedDocuments = req.body;
-
+    console.log("📥 Datos recibidos en el backend:", JSON.stringify(updatedDocuments, null, 2));
     try {
         const employee = await Employee.findById(id);
         if (!employee) {
@@ -170,9 +170,11 @@ router.post('/:id/documents', authenticateToken, async (req, res) => {
 
         Object.keys(updatedDocuments).forEach((docKey) => {
             const documentData = updatedDocuments[docKey];
+            console.log(`📥 Procesando en el backend -> Tipo: ${docKey}, Estado: ${documentData.status}, Fecha: ${documentData.dueDate}`);
+
             employee.documents.set(docKey, {
                 status: documentData.status || "No Presentado",
-                dueDate: documentData.dueDate || null,
+                dueDate: documentData.dueDate ? new Date(documentData.dueDate) : null, // 💡 Forzar conversión a Date
                 filePath: documentData.filePath || null,
             });
         });
