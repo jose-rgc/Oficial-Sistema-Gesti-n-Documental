@@ -55,7 +55,15 @@ async function loadEmployeesForDocuments() {
             console.log('ID enviado a upload-documents:', employeeId);
             window.location.href = `upload-documents.html?id=${employeeId}`; // Redirige a la página
         });
-    });   
+    });
+    document.querySelectorAll('.view-documents-button').forEach((button) => {
+        button.addEventListener('click', (e) => {
+            const employeeId = e.target.dataset.id;
+            console.log('ID enviado a view-employee:', employeeId);
+            window.location.href = `view-employee.html?id=${employeeId}`; // Redirige a la nueva página
+        });
+    });
+       
 }
 // Llamar a la función al cargar la página
 loadEmployeesForDocuments();

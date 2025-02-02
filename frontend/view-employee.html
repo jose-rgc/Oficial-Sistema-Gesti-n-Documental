@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información del Funcionario</title>
+    <link rel="stylesheet" href="css/styles.css"> <!-- Archivo CSS para estilos -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #004085;
+        }
+
+        .info-box {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #004085;
+            color: white;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background: #004085;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #002752;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Información del Funcionario</h1>
+
+        <div class="info-box">
+            <p><strong>CI:</strong> <span id="employeeCI"></span></p>
+            <p><strong>Nombre:</strong> <span id="employeeName"></span></p>
+            <p><strong>Apellido:</strong> <span id="employeeLastName"></span></p>
+            <p><strong>Cargo:</strong> <span id="employeePosition"></span></p>
+            <p><strong>Unidad:</strong> <span id="employeeUnit"></span></p>
+            <p><strong>Fecha Inicio Contrato:</strong> <span id="employeeStartDate"></span></p>
+            <p><strong>Fecha Fin Contrato:</strong> <span id="employeeEndDate"></span></p>
+        </div>
+
+        <h2>Documentos del Funcionario</h2>
+        <table id="documentsTable">
+            <thead>
+                <tr>
+                    <th>Documento</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Se llenará dinámicamente con JavaScript -->
+            </tbody>
+        </table>
+
+        <div class="btn-container">
+            <button onclick="window.history.back()">Volver</button>
+            <button id="generateReportButton">Generar Reporte</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/view-employee.js"></script>
+</body>
+</html>
+
