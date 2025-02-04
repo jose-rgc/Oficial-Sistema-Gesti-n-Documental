@@ -1,7 +1,8 @@
 /* General */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #002147, #004080);
+    color: white;
     margin: 0;
     padding: 0;
     display: flex;
@@ -11,9 +12,356 @@ body {
     height: 100vh;
 }
 
-h1, h2 {
-    color: #333;
+/* Header */
+.dashboard-header {
+    background-color: #001B33;
+    color: white;
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.back-button {
+    display: inline-block;
+    margin-top: 10px;
+    background-color: #0056b3;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.back-button:hover {
+    background-color: #003d80;
+}
+
+#logoutButton {
+    background-color: #0056b3;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 15px;
+}
+
+#logoutButton:hover {
+    background-color: #003d80;
+}
+
+/* Modules */
+.modules-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.module-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-left: 5px solid #0056b3;
+    color: #002147;
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.module-card a {
+    text-decoration: none;
+    color: #002147;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.module-card a:hover {
+    text-decoration: underline;
+}
+.dashboard-main {
+    width: 100%;
+    max-width: 95%;
+    padding: 20px;
+    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* Tabla de funcionarios */
+.dashboard-main table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    overflow-x: auto; /* Agregar scroll horizontal si es necesario */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    white-space: nowrap; /* Evitar que el contenido se desborde */
+}
+/* Contenedor de la tabla para asegurar su alineación */
+/* Contenedor de la tabla para evitar que se encoja */
+.table-container {
+    width: 100%;
+    max-width: 95%;
+    overflow-x: auto; /* Asegura que si la tabla es muy ancha, se pueda desplazar */
+}
+/* Tabla */
+/* Tabla */
+.dashboard-main table {
+    width: 100%;
+    min-width: 1300px; /* Ajusta según la cantidad de columnas */
+    border-collapse: collapse;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+/* Asegurar que el encabezado sea visible */
+.dashboard-main table th {
+    background-color: #004080;
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.dashboard-main table td {
+    padding: 10px;
+    text-align: center;
+    color: #002147;
+    word-wrap: break-word;
+}
+.dashboard-main table tr:nth-child(even) {
+    background-color: #e6e6e6;
+}
+
+.dashboard-main table tr:hover {
+    background-color: #d0d0d0;
+}
+/* Permitir desplazamiento horizontal si es necesario */
+.dashboard-main table thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+.dashboard-main table tbody {
+    display: block;
+    width: 100%;
+    overflow-y: auto;
+    max-height: 500px; /* Ajusta la altura para que no se corte el encabezado */
+}
+/* Asegurar que la tabla ocupe todo el espacio */
+.dashboard-main table th,
+.dashboard-main table td {
+    white-space: nowrap; /* Evita que el texto se corte */
+    min-width: 150px; /* Ajuste según el contenido */
+}
+/* Hacer que el encabezado se quede fijo */
+.dashboard-main table thead {
+    position: sticky;
+    top: 0;
+    background-color: #004080;
+    z-index: 2;
+}
+/* Mejor visualización en pantallas grandes */
+@media screen and (min-width: 1024px) {
+    .table-container {
+        width: 90%;
+    }
+}
+/* Alternar colores en las filas */
+.dashboard-main table tr:nth-child(even) {
+    background-color: #e6e6e6;
+}
+
+/* Resaltar fila al pasar el mouse */
+.dashboard-main table tr:hover {
+    background-color: #d0d0d0;
+}
+
+/* Botones de la tabla */
+.dashboard-main .action-buttons {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.dashboard-main button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    width: 85px;
+}
+/* Botones personalizados */
+.view-documents-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.view-documents-button:hover {
+    background-color: #0056b3;
+}
+
+/* Botón de subida de documentos */
+.upload-documents-button {
+    background-color: #28a745;
+    color: white;
+    font-size: 14px;
+    padding: 10px 15px;
+    border-radius: 6px;
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    width: 200px;
+    font-weight: bold;
+}
+
+.upload-documents-button:hover {
+    background-color: #218838;
+}
+#employeeInfo {
+    width: 90%;
+    max-width: 700px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+    text-align: center;
+}
+
+#employeeInfo p {
+    font-size: 16px;
+    font-weight: bold;
+    color: #002147;
+    margin: 8px 0;
+}
+
+#employeeInfo span {
+    font-weight: normal;
+    color: #555;
+}
+.edit-button {
+    background-color: #28a745;
+    color: white;
+}
+
+.delete-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.edit-button:hover {
+    background-color: #218838;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+/* Botón Agregar Funcionario */
+/* Botón Agregar Funcionario */
+#addEmployeeButton {
+    margin-top: 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+#addEmployeeButton:hover {
+    background-color: #218838;
+}
+
+
+/* Modal */
+.modal-content {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #002147;
+    font-weight: bold;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modal-content form label {
+    font-weight: bold;
+    color: #002147;
+}
+
+.modal-content form input,
+.modal-content form select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.modal-content form button {
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.modal-content form button[type="submit"] {
+    background-color: #0056b3;
+    color: white;
+}
+
+.modal-content form button[type="submit"]:hover {
+    background-color: #003d80;
+}
+
+.modal-content form button[type="button"] {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.modal-content form button[type="button"]:hover {
+    background-color: #d11a2a;
+}
+
+
 
 /* Header */
 header.dashboard-header {
@@ -258,46 +606,180 @@ main.dashboard-main table td {
     opacity: 1;
     visibility: visible;
 }
-.document-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+/* Contenedor General */
+#documentsForm {
+    width: 90%;
+    max-width: 800px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+}
+/* Documentos Row */
+#documentsForm {
+    width: 90%;
+    max-width: 800px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
 }
 
-.document-row label {
-    font-weight: bold;
+/* Documentos Row */
+.document-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #f8f9fa; /* Fondo claro para mejorar contraste */
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
 }
 
 .document-row span {
     color: gray;
 }
-.document-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
 
 .document-label {
-    flex: 2;
-    margin-right: 10px;
+    font-weight: bold;
+    color: #002147;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+/* Estilos de los selects */
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+}
+
+/* Input para archivos */
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background: #fff;
+    cursor: pointer;
+}
+.document-link {
+    text-decoration: underline;
+    color: #00c3ff;
+    font-weight: bold;
+    padding-left: 10px;
+    transition: color 0.3s;
+}
+.document-link:hover {
+    text-decoration: underline;
+}
+/* Botón de Guardar Cambios */
+#saveChangesButton {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.3s;
+}
+
+#saveChangesButton:hover {
+    background-color: #0056b3;
+}
+/* Fondo mejorado con un degradado más elegante */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #004a99, #007bff);
+}
+
+/* Estilos para la tarjeta de login */
+.login-box {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Animación para que el login aparezca con efecto */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos de los inputs */
+.input-group {
+    margin-bottom: 15px;
     text-align: left;
 }
 
-select {
-    flex: 3;
-    margin-right: 10px;
+.input-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
 }
 
-input[type="file"] {
-    flex: 3;
-    margin-right: 10px;
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
 }
 
-.document-link {
-    flex: 2;
-    text-align: right;
-    color: blue;
-    text-decoration: underline;
+/* Botón de inicio de sesión con efecto hover */
+button {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
     cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Mensaje de error más visible */
+.error-box {
+    color: white;
+    background: #d9534f;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+    font-weight: bold;
+    display: none;
 }

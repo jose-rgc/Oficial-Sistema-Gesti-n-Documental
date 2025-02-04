@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Aquí todo tu código
     const loginForm = document.getElementById('loginForm');
+
     if (loginForm) {
         loginForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
 
             try {
                 const response = await fetch('http://localhost:3000/auth/login', {
@@ -19,23 +20,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.message || 'Error desconocido');
+                    throw new Error(errorData.message || 'Usuario o contraseña incorrectos');
                 }
 
                 const data = await response.json();
                 localStorage.setItem('authToken', data.token);
-
-                // Redirigir al dashboard
                 window.location.href = 'dashboard.html';
             } catch (error) {
-                document.getElementById('errorMessage').textContent = error.message;
+                errorMessage.textContent = error.message;
+                errorMessage.style.display = 'block';
             }
         });
     }
 
-    // Verificar si el usuario está autenticado al cargar el dashboard
     if (window.location.pathname.endsWith('dashboard.html')) {
         const token = localStorage.getItem('authToken');
+
         if (!token) {
             alert('No estás autenticado. Por favor, inicia sesión.');
             window.location.href = 'index.html';
@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('userInfo').textContent = `Usuario: ${payload.username} | Rol: ${payload.role}`;
         }
 
-        // Manejar cierre de sesión
         const logoutButton = document.getElementById('logoutButton');
         if (logoutButton) {
             logoutButton.addEventListener('click', () => {
@@ -54,3 +53,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+

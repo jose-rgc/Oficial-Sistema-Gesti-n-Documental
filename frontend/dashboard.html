@@ -5,21 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="dashboard-header">
-        <h1>Bienvenido al Sistema</h1>
+        <h1>Bienvenido al Sistema de Gestión Documental</h1>
         <p id="userInfo"></p>
         <button id="logoutButton">Cerrar Sesión</button>
     </header>
+    
     <main class="dashboard-main">
         <h2>Módulos Disponibles</h2>
-        <div class="modules">
-            < <a href="users.html" id="usersModule">Gestión de Usuarios</a>
-            <a href="employees.html" id="employeesModule">Gestión de Funcionarios</a>
-            <a href="documents.html" id="documentsModule">Gestión de Documentos</a>
+        <div class="modules-container">
+            <div class="module-card">
+                <a href="users.html" id="usersModule">Gestión de Usuarios</a>
+            </div>
+            <div class="module-card">
+                <a href="employees.html" id="employeesModule">Gestión de Funcionarios</a>
+            </div>
+            <div class="module-card">
+                <a href="documents.html" id="documentsModule">Gestión de Documentos</a>
+            </div>
         </div>
     </main>
+    
     <script src="js/app.js"></script>
 </body>
 </html>

@@ -4,16 +4,285 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Funcionarios</title>
-    <link rel="stylesheet" href="css/styles.css">
+
+    <style>
+        /* Paleta de colores */
+        :root {
+            --primary-color: #004085;
+            --secondary-color: #007bff;
+            --background-color: #f4f6f9;
+            --card-color: #ffffff;
+            --text-color: #333;
+            --button-green: #28a745;
+            --button-red: #dc3545;
+            --button-yellow: #ffc107;
+            --button-hover: #003366;
+        }
+
+        /* Estilos Generales */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #004085, #002752);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+
+        /* Encabezado */
+        .dashboard-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-button {
+            background-color: var(--button-yellow);
+            color: black;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #e6b800;
+        }
+
+        .dashboard-title {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 22px;
+        }
+
+        /* Contenedor Principal */
+        .dashboard-main {
+            width: 90%;
+            max-width: 1100px;
+            background: var(--card-color);
+            color: var(--text-color);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--primary-color);
+        }
+
+        /* Botón de Agregar Funcionario */
+        #addEmployeeButton {
+            background: var(--button-green);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        #addEmployeeButton:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e2e6ea;
+        }
+
+        /* Botones de la tabla */
+        .edit-button {
+            background-color: var(--button-yellow);
+            color: black;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .edit-button:hover {
+            background-color: #e0a800;
+        }
+
+        .delete-button {
+            background-color: var(--button-red);
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .modal-content h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-weight: bold;
+            width: 100%;
+            text-align: center;
+        }
+        .modal-content label {
+            display: block;
+            font-weight: bold;
+            margin: 10px 0 5px;
+            color: var(--primary-color);
+            text-align: left;
+            width: 100%;
+            font-size: 15px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #f8f9fa;
+        }
+
+        /* Botón de cerrar */
+        #closeEmployeeModal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            color: #dc3545;
+            border: none;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        #closeEmployeeModal:hover {
+            color: #a71d2a;
+            background: rgba(220, 53, 69, 0.2);
+            transform: scale(1.2);
+        }
+         /* Botón de guardar */
+         .modal-content button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+            margin-top: 15px;
+        }
+
+        .modal-content button:hover {
+            background-color: var(--button-hover);
+        }
+    </style>
 </head>
 <body>
     <header class="dashboard-header">
-        <h1>Gestión de Funcionarios</h1>
-        <a href="dashboard.html" class="back-button">Volver al Dashboard</a>
+        <a href="dashboard.html" class="back-button">🔙 Volver</a>
+        <span class="dashboard-title">Gestión de Funcionarios</span>
     </header>
     <main class="dashboard-main">
         <h2>Funcionarios Registrados</h2>
-        <button id="addEmployeeButton">Agregar Funcionario</button>
+        <button id="addEmployeeButton">➕ Agregar Funcionario</button>
         <table id="employeesTable">
             <thead>
                 <tr>
@@ -34,7 +303,7 @@
     <!-- Modal para Crear/Editar Funcionario -->
     <div id="employeeModal" class="modal">
         <div class="modal-content">
-            <button id="closeEmployeeModal">&times;</button>
+            <button id="closeEmployeeModal">✖</button>
             <h2 id="employeeModalTitle">Editar Funcionario</h2>
             <form id="employeeForm">
                 <label for="ci">CI:</label>

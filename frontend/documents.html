@@ -4,43 +4,283 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Documentos</title>
-    <link rel="stylesheet" href="css/styles.css">
+    
+    <style>
+        /* Paleta de colores */
+        :root {
+            --primary-color: #004085;
+            --secondary-color: #007bff;
+            --background-color: #f4f6f9;
+            --card-color: #ffffff;
+            --text-color: #333;
+            --button-green: #28a745;
+            --button-red: #dc3545;
+            --button-yellow: #ffc107;
+            --button-hover: #003366;
+            --important-column: #dbe6f5;
+            --header-background: #002752;
+            --border-color: #bbb;
+            --header-highlight: #0056b3;
+        }
+
+        /* Estilos Generales */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #004085, #002752);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+
+        /* Encabezado */
+        .dashboard-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .back-button {
+            background-color: var(--button-yellow);
+            color: black;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #e6b800;
+        }
+
+        .dashboard-title {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 22px;
+        }
+
+        /* Contenedor Principal */
+        .dashboard-main {
+            width: 95%;
+            max-width: 1200px;
+            background: var(--card-color);
+            color: var(--text-color);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        /* Contenedor de tabla con scroll horizontal */
+        .table-container {
+            overflow-x: auto;
+            max-width: 100%;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+            background: white;
+        }
+
+        table {
+            width: 2200px; /* Asegurar que la tabla sea más ancha para el scroll */
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e2e6ea;
+        }
+         /* Encabezado */
+         thead {
+            background-color: var(--header-background);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        /* Encabezado fijo */
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: #004085; /* Azul fuerte */
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            border-bottom: 3px solid #002752; /* Borde más marcado */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra para visibilidad */
+            z-index: 6;
+        }
+        /* Fijar las primeras tres columnas con mejor fondo */
+        th:first-child, td:first-child { 
+            position: sticky; 
+            left: 0; 
+            background-color: #b0c4de; /* Azul claro */
+            color: #002752; /* Azul oscuro */
+            font-weight: bold;
+            z-index: 5;
+        }
+
+        th:nth-child(2), td:nth-child(2) { 
+            position: sticky; 
+            left: 80px; 
+            background-color: #b0c4de; /* Azul claro */
+            color: #002752; /* Azul oscuro */
+            font-weight: bold;
+            z-index: 5;
+        }
+
+        th:nth-child(3), td:nth-child(3) { 
+            position: sticky; 
+            left: 180px; 
+            background-color: #b0c4de; /* Azul claro */
+            color: #002752; /* Azul oscuro */
+            font-weight: bold;
+            z-index: 5;
+        }
+        th:first-child, th:nth-child(2), th:nth-child(3) {
+            position: sticky;
+            left: 0;
+            background-color: #004085 !important; /* Mismo color que los demás encabezados */
+            color: white !important; /* Texto blanco para contraste */
+            font-weight: bold;
+            z-index: 6;
+            border-right: 2px solid #ffffff; /* Separación visual */
+        }
+        td:first-child, td:nth-child(2), td:nth-child(3) {
+            background-color: #b0c4de !important; /* Azul claro */
+            color: #002752 !important; /* Texto azul oscuro */
+            font-weight: bold;
+        }
+        /* Alternar colores en filas */
+        tr:nth-child(even) {
+            background-color: #f1f1f1;
+        }
+
+        tr:hover {
+            background-color: #d9e2f3;
+        }
+         /* Columnas importantes resaltadas */
+        th:first-child, 
+        th:nth-child(2), 
+        th:nth-child(3),
+        td:first-child, 
+        td:nth-child(2), 
+        td:nth-child(3) {
+            position: sticky;
+            left: 0;
+            background-color: var(--important-column);
+            font-weight: bold;
+            z-index: 3;
+        }
+        
+        /* Botones de la tabla */
+        .view-documents-button {
+            background-color: var(--button-yellow);
+            color: black;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .view-documents-button:hover {
+            background-color: #e0a800;
+        }
+
+        .upload-documents-button {
+            background-color: var(--button-green);
+            color: white;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .upload-documents-button:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
     <header class="dashboard-header">
-        <h1>Gestión de Documentos</h1>
-        <a href="dashboard.html" class="back-button">Volver al Dashboard</a>
+        <a href="dashboard.html" class="back-button">🔙 Volver</a>
+        <span class="dashboard-title">Gestión de Documentos</span>
     </header>
     <main class="dashboard-main">
-        <h2>Funcionarios Registrados</h2>
-        <table id="documentsTable">
-            <thead>
-                <tr>
-                    <th>CI</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Carnet de Identidad</th>
-                    <th>Certificado de Nacimiento</th>
-                    <th>Certificado de Matrimonio</th>
-                    <th>Libreta Militar</th>
-                    <th>Croquis de Domicilio</th>
-                    <th>Curriculum</th>
-                    <th>Título Provisión Nacional</th>
-                    <th>Diploma Académico</th>
-                    <th>Rejap</th>
-                    <th>Cenvi</th>
-                    <th>Declaración de Notaría</th>
-                    <th>Certificado Médico</th>
-                    <th>NIT</th>
-                    <th>Declaración de Bienes y Rentas</th>
-                    <th>Contrato</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Los funcionarios se llenarán dinámicamente -->
-            </tbody>
-        </table>
+        <h2>Documentos de Funcionarios</h2>
+        <div class="table-container">
+            <table id="documentsTable">
+                <thead>
+                    <tr>
+                        <th>CI</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Carnet de Identidad</th>
+                        <th>Certificado de Nacimiento</th>
+                        <th>Certificado de Matrimonio</th>
+                        <th>Libreta Militar</th>
+                        <th>Croquis de Domicilio</th>
+                        <th>Curriculum</th>
+                        <th>Título Provisión Nacional</th>
+                        <th>Diploma Académico</th>
+                        <th>Rejap</th>
+                        <th>Cenvi</th>
+                        <th>Declaración de Notaría</th>
+                        <th>Certificado Médico</th>
+                        <th>NIT</th>
+                        <th>Declaración de Bienes y Rentas</th>
+                        <th>Contrato</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Se llenará dinámicamente -->
+                </tbody>
+            </table>
+        </div>
     </main>
     <script src="js/documents.js"></script>
 </body>

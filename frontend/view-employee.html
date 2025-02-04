@@ -6,86 +6,232 @@
     <title>Información del Funcionario</title>
     <link rel="stylesheet" href="css/styles.css"> <!-- Archivo CSS para estilos -->
     <style>
+        /* Paleta de colores */
+        :root {
+            --primary-color: #004085;
+            --secondary-color: #007bff;
+            --background-color: #f4f6f9;
+            --card-color: #ffffff;
+            --text-color: #333;
+            --button-green: #28a745;
+            --button-red: #dc3545;
+            --button-yellow: #ffc107;
+            --button-hover: #003366;
+            --border-color: #bbb;
+            --table-header: #002752;
+            --button-blue: #0056b3;
+        }
+
+        /* Estilos generales */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #004085, #002752);
+            color: var(--text-color);
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
         }
 
+        /* Botón volver en la parte superior izquierda */
+        .back-button {
+            background-color: var(--button-yellow);
+            color: black;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #e0a800;
+        }
+
+        /* Contenedor principal */
         .container {
-            width: 80%;
-            margin: auto;
-            background: #ffffff;
+            width: 90%;
+            max-width: 900px;
+            background: var(--card-color);
+            color: var(--text-color);
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
-
-        h1 {
+            border-radius: 12px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            margin-top: 60px;
             text-align: center;
-            color: #004085;
         }
 
-        .info-box {
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 5px;
+        /* Títulos */
+        h1, h2 {
+            color: var(--primary-color);
+            text-align: center;
+            font-weight: bold;
             margin-bottom: 20px;
         }
 
+        /* Tarjeta de información del funcionario */
+        .info-box {
+            background: var(--background-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-box p {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 4px;
+        }
+
+        .info-box span {
+            font-weight: normal;
+            color: var(--text-color);
+        }
+
+        /* Tabla de documentos */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+            background-color: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
+        /* Encabezados de la tabla */
         th {
-            background: #004085;
+            background: var(--table-header);
             color: white;
+            font-weight: bold;
+            text-align: left;
+            padding: 12px;
         }
 
-        .btn-container {
-            text-align: center;
-            margin-top: 20px;
+        /* Celdas de la tabla */
+        td {
+            padding: 12px;
+            text-align: left;
+            color: #002147;
+            font-weight: bold;
         }
 
-        button {
-            background: #004085;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
+        /* Alternar colores en las filas */
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
         }
 
-        button:hover {
-            background: #002752;
+        /* Resaltar fila al pasar el mouse */
+        tr:hover {
+            background-color: #d0d0d0;
         }
 
-        a {
-            color: #007bff;
+        /* Enlaces dentro de la tabla */
+        td a {
+            font-weight: bold;
             text-decoration: none;
         }
 
-        a:hover {
+        td a[href*="Ver Documento"] {
+            color: var(--secondary-color);
+        }
+
+        td a[href*="Ver Documento"]:hover {
             text-decoration: underline;
         }
+
+        /* Ajuste de colores para los estados */
+        td[style*="color: green"] {
+            color: var(--button-green) !important;
+        }
+
+        td[style*="color: orange"] {
+            color: #ff8c00 !important;
+        }
+
+        td[style*="color: red"] {
+            color: var(--button-red) !important;
+        }
+
+        td[style*="color: gray"] {
+            color: #6c757d !important;
+        }
+
+        /* Botón Generar Reporte */
+        #generateReportButton {
+            background: var(--button-blue);
+            color: white;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        #generateReportButton:hover {
+            background: #004085;
+        }
+        /* Contenedor de la barra de progreso */
+.progress-container {
+    width: 100%;
+    margin: 20px 0;
+    text-align: center;
+}
+
+/* Texto de progreso */
+#progress-text {
+    font-weight: bold;
+    color: #004085;
+    margin-bottom: 5px;
+}
+
+/* Barra de progreso */
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Relleno de la barra de progreso */
+.progress-fill {
+    height: 100%;
+    width: 0%; /* Esto se actualizará dinámicamente con JS */
+    background-color: #28a745; /* Verde */
+    transition: width 0.5s ease-in-out;
+}
+
     </style>
 </head>
 <body>
+    <a href="documents.html" class="back-button">⬅ Volver</a>
+
     <div class="container">
+        <div class="progress-container">
+            <p id="progress-text">Progreso: 0% completado ✅</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
         <h1>Información del Funcionario</h1>
 
         <div class="info-box">
@@ -111,14 +257,10 @@
             </tbody>
         </table>
 
-        <div class="btn-container">
-            <button onclick="window.history.back()">Volver</button>
-            <button id="generateReportButton">Generar Reporte</button>
-        </div>
+        <button id="generateReportButton">Generar Reporte</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="js/view-employee.js"></script>
 </body>
 </html>
-

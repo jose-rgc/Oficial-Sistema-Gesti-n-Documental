@@ -33,22 +33,22 @@ async function loadEmployees() {
                 <td>${employee.cargo}</td>
                 <td>${employee.unidad}</td>
                 <td>
-                    <button class="edit-employee-button" data-id="${employee._id}">Editar</button>
-                    <button class="delete-employee-button" data-id="${employee._id}">Eliminar</button>
+                    <button class="edit-button" data-id="${employee._id}">Editar</button>
+                    <button class="delete-button" data-id="${employee._id}">Eliminar</button>
                 </td>
             `;
             tbody.appendChild(row);
         });
 
         // Asignar eventos a los botones
-        document.querySelectorAll('.edit-employee-button').forEach((button) => {
+        document.querySelectorAll('.edit-button').forEach((button) => {
             button.addEventListener('click', (e) => {
                 const employeeId = e.target.dataset.id;
                 openEmployeeModal(employeeId);
             });
         });
 
-        document.querySelectorAll('.delete-employee-button').forEach((button) => {
+        document.querySelectorAll('.delete-button').forEach((button) => {
             button.addEventListener('click', (e) => {
                 const employeeId = e.target.dataset.id;
                 deleteEmployee(employeeId);

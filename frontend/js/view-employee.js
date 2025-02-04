@@ -275,5 +275,66 @@ function renderDocumentsList(documents) {
 }
 
 
+function updateProgressBar(documents) {
+    let totalDocs = 0;
+    let completedDocs = 0;
+
+    Object.values(documents).forEach(doc => {
+        if (doc.status !== "No Corresponde") { // Ignorar documentos que no aplican
+            totalDocs++; // Contar solo los documentos requeridos
+            if (doc.status === "Presento") {
+                completedDocs++;
+            }
+        }
+    });
+
+    // Calcular porcentaje
+    const progressPercentage = totalDocs > 0 ? Math.round((completedDocs / totalDocs) * 100) : 0;
+
+    // Actualizar la barra de progreso y el texto
+    document.getElementById("progress-fill").style.width = `${progressPercentage}%`;
+    document.getElementById("progress-text").textContent = `Progreso: ${progressPercentage}% completado ✅`;
+}
+
+// Llamar a la función después de renderizar la lista de documentos
+function renderDocumentsList(documents) {
+    const tableBody = document.getElementById('documentsTable').querySelector('tbody');
+    tableBody.innerHTML = '';
+
+    Object.keys(documents).forEach((docKey) => {
+        const row = document.createElement('tr');
+        const documentData = documents[docKey] || {};
+        const documentStatus = documentData.status || "No Presentado";
+        const filePath = documentData.filePath || null;
+
+        let statusDisplay = documentStatus;
+        let statusColor = "";
+
+        if (documentStatus === "Presento" && filePath) {
+            statusDisplay = `✅ <a href="${filePath}" target="_blank">Ver Documento</a>`;
+            statusColor = "green";
+        } else if (documentStatus === "Pendiente") {
+            statusDisplay = `⚠️ Pendiente`;
+            statusColor = "orange";
+        } else if (documentStatus === "No Presentado") {
+            statusDisplay = "❌ No Presentado";
+            statusColor = "red";
+        } else if (documentStatus === "No Corresponde") {
+            statusDisplay = "⚪ No Corresponde";
+            statusColor = "gray";
+        }
+
+        row.innerHTML = `
+            <td>${docKey.replace(/([A-Z])/g, ' $1')}</td>
+            <td style="color: ${statusColor}; font-weight: bold;">${statusDisplay}</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+
+    // Actualizar la barra de progreso después de renderizar la tabla
+    updateProgressBar(documents);
+}
+
 // Llamar a la función al cargar la página
 loadEmployeeDetails();

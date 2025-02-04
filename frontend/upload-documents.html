@@ -3,22 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Documentos</title>
+    <title>Gestión de Documentos del Funcionario</title>
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Paleta de colores */
+        :root {
+            --primary-color: #004085;
+            --secondary-color: #007bff;
+            --background-color: #f4f6f9;
+            --card-color: #ffffff;
+            --text-color: #333;
+            --button-green: #28a745;
+            --button-red: #dc3545;
+            --button-yellow: #ffc107;
+            --button-hover: #003366;
+            --border-color: #bbb;
+            --light-blue: #e9f1fa;
+        }
+
+        /* Estilos generales */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #004085, #002752);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+        /* Botón Volver */
+        .back-button {
+            background-color: var(--button-yellow);
+            color: black;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.3s;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+        }
+
+        .back-button:hover {
+            background-color: #e6b800;
+        }
+
+        /* Icono de flecha */
+        .back-button i {
+            font-size: 18px;
+        }
+
+        /* Contenedor principal */
+        .container {
+            width: 90%;
+            max-width: 900px;
+            background: var(--card-color);
+            color: var(--text-color);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Encabezado */
+        .header {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* Tarjeta de información del funcionario */
+        .employee-info {
+            background: var(--background-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .employee-info p {
+            margin: 8px 0;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .employee-info span {
+            font-weight: normal;
+            color: var(--text-color);
+        }
+
+        /* Contenedor de documentos */
+        .documents-container {
+            background: var(--card-color);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .document-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--light-blue);
+            border-radius: 6px;
+        }
+
+        .document-label {
+            font-weight: bold;
+            flex: 1;
+            color: var(--primary-color);
+        }
+
+        .document-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        select, input[type="date"], input[type="file"] {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: 0.3s ease-in-out;
+        }
+
+        select:hover, input[type="date"]:hover, input[type="file"]:hover {
+            border-color: var(--primary-color);
+        }
+
+        input[type="date"],
+        input[type="file"] {
+            flex: 1;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            background: white;
+        }
+
+        /* Botón de guardar cambios */
+        #saveChangesButton {
+            background-color: var(--button-green);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+            margin-top: 15px;
+            text-transform: uppercase;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        #saveChangesButton:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
-    <h2>Gestión de Documentos - Funcionario</h2>
-    <p>CI: <span id="employeeCI"></span></p>
-    <p>Nombre: <span id="employeeName"></span></p>
-    <p>Apellido: <span id="employeeLastName"></span></p>
-    <p>Cargo: <span id="employeePosition"></span></p>
-    <h3>Documentos del Funcionario</h3>
-        <form id="documentsForm">
-            <div id="documentsList">
-                <!-- Aquí se generarán dinámicamente los documentos -->
-            </div>
-            <button id="saveChangesButton">Guardar Cambios</button>
-        </form>
+        <!-- Botón Volver -->
+        <a href="documents.html" class="back-button">
+            <i>←</i> Volver
+        </a>
+    <div class="container">
+        <div class="header">Gestión de Documentos del Funcionario</div>
+        
+        <div class="employee-info">
+            <p>CI: <span id="employeeCI"></span></p>
+            <p>Nombre: <span id="employeeName"></span></p>
+            <p>Apellido: <span id="employeeLastName"></span></p>
+            <p>Cargo: <span id="employeePosition"></span></p>
+        </div>
+        <div class="documents-container">
+            <h3 class="header">Documentos del Funcionario</h3>
+            <form id="documentsForm">
+                <div id="documentsList">
+                <!-- Se generarán dinámicamente los documentos aquí -->
+                </div>
+                <button id="saveChangesButton">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
 
     <!-- Aquí enlazamos el archivo JS -->
     <script src="js/upload-documents.js"></script>

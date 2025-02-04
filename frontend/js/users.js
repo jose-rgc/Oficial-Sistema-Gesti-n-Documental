@@ -65,14 +65,18 @@ async function openModal(userId = null) {
     const roleField = document.getElementById('role');
     const userForm = document.getElementById('userForm');
 
-    // Mostrar modal y formulario
+    // Asegurarse de que el modal esté visible
     modal.classList.add('show');
     userForm.style.display = 'block';
 
     if (userId) {
         // Editar Usuario
         modalTitle.textContent = 'Editar Usuario';
-        passwordField.parentElement.style.display = 'none'; // Ocultar contraseña al editar
+        
+        // Ocultar campo y etiqueta de contraseña al editar
+        passwordField.style.display = 'none';
+        passwordField.previousElementSibling.style.display = 'none';
+        
         try {
             const token = localStorage.getItem('authToken');
             const response = await fetch(`${apiBaseUrl}/users/${userId}`, {
@@ -84,29 +88,32 @@ async function openModal(userId = null) {
             }
 
             const user = await response.json();
+            console.log("🔹 Cargando datos del usuario:", user); // Para depuración
             usernameField.value = user.username || '';
             roleField.value = user.role || '';
+
         } catch (error) {
             console.error('Error al cargar usuario:', error);
             alert('Hubo un problema al cargar los datos del usuario.');
-            modal.classList.remove('show');
+            modal.classList.remove('show'); // Si hay error, cerrar el modal
         }
 
-        userForm.onsubmit = (e) => {
+        userForm.onsubmit = async (e) => {
             e.preventDefault();
-            updateUser(userId);
+            await updateUser(userId);
         };
+
     } else {
         // Crear Usuario
         modalTitle.textContent = 'Agregar Usuario';
-        passwordField.parentElement.style.display = 'block'; // Mostrar contraseña
+        passwordField.style.display = 'block'; // Mostrar contraseña
         usernameField.value = '';
         passwordField.value = '';
         roleField.value = 'user';
 
-        userForm.onsubmit = (e) => {
+        userForm.onsubmit = async (e) => {
             e.preventDefault();
-            createUser();
+            await createUser();
         };
     }
 }
