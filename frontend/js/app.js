@@ -41,10 +41,20 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'index.html';
         } else {
             const payload = JSON.parse(atob(token.split('.')[1]));
-            document.getElementById('userInfo').textContent = `Usuario: ${payload.username} | Rol: ${payload.role}`;
+
+            // SELECCIONAMOS LOS ELEMENTOS CORRECTOS PARA MOSTRAR USUARIO Y ROL
+            const usernameElement = document.getElementById('usernameDisplay');
+            const roleElement = document.getElementById('userRoleDisplay');
+
+            if (usernameElement && roleElement) {
+                usernameElement.textContent = payload.username; // Nombre del usuario
+                roleElement.textContent = payload.role; // Rol del usuario
+            } else {
+                console.error("No se encontraron los elementos usernameDisplay o userRoleDisplay.");
+            }
         }
 
-        const logoutButton = document.getElementById('logoutButton');
+        const logoutButton = document.querySelector('.logout-btn');
         if (logoutButton) {
             logoutButton.addEventListener('click', () => {
                 localStorage.removeItem('authToken');
@@ -53,4 +63,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-

@@ -3,32 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard - Gestión Documental</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* Paleta de colores */
+        :root {
+            --primary-color: #004085;
+            --secondary-color: #007bff;
+            --background-color: #f4f6f9;
+            --card-color: rgba(255, 255, 255, 0.9); /* Fondo translúcido */
+            --text-color: #333;
+            --button-green: #28a745;
+            --button-red: #dc3545;
+            --button-yellow: #ffc107;
+            --button-hover: #003366;
+            --footer-bg: #2c2f3f;
+        }
+
+        /* Estilos generales */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('img/Alcaldia1.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Contenedor principal */
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Encabezado */
+        .header {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #004085, #002752);
+            color: white;
+            padding: 15px 30px;
+            width: 100%;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 10px;
+        }
+
+        .header-logo img {
+            width: 70px;
+            height: auto;
+        }
+
+        .header-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+
+        /* Estilo del botón de Cerrar Sesión */
+        .logout-container {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .logout-btn {
+            background: var(--button-red);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+            transform: scale(1.05);
+        }
+
+        .logout-btn i {
+            font-size: 14px;
+        }
+
+        /* Módulos */
+        .modules-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 30px auto;
+            flex-wrap: wrap;
+        }
+
+        .module-card {
+            background: var(--card-color);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 200px;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            color: var(--primary-color);
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+        }
+
+        .module-card:hover {
+            transform: scale(1.08);
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .module-card i {
+            font-size: 40px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .module-card a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: bold;
+            display: block;
+            font-size: 16px;
+        }
+
+        /* Estilo del título de módulos */
+        .module-title {
+            font-size: 28px;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Pie de página */
+        .footer {
+            background: var(--footer-bg);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 24px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .social-icons a:hover {
+            color: var(--button-yellow);
+        }
+
+        .footer p {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .user-info {
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .role-badge {
+            color: var(--button-yellow);
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <header class="dashboard-header">
-        <h1>Bienvenido al Sistema de Gestión Documental</h1>
-        <p id="userInfo"></p>
-        <button id="logoutButton">Cerrar Sesión</button>
+
+    <!-- Encabezado -->
+    <header class="header">
+        <div class="header-logo">
+            <img src="img/Alcaldia.jpg" alt="Logo Gobierno Autónomo Municipal de Potosí">
+        </div>
+        <h1 class="header-title">Bienvenido al Sistema de Gestión Documental</h1>
+        <div class="user-info">
+            <i class="fas fa-user"></i> 
+            <span id="usernameDisplay">Cargando...</span> | 
+            <span id="userRoleDisplay" class="role-badge">Cargando...</span>
+        </div>
+        <div class="logout-container">
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </button>
+        </div>
     </header>
-    
-    <main class="dashboard-main">
-        <h2>Módulos Disponibles</h2>
+
+    <!-- Contenido -->
+    <div class="container">
+        <h2 class="module-title">Selecciona un Módulo para Continua</h2>
         <div class="modules-container">
             <div class="module-card">
-                <a href="users.html" id="usersModule">Gestión de Usuarios</a>
+                <i class="fas fa-users"></i>
+                <a href="users.html">Gestión de Usuarios</a>
             </div>
             <div class="module-card">
-                <a href="employees.html" id="employeesModule">Gestión de Funcionarios</a>
+                <i class="fas fa-id-badge"></i>
+                <a href="employees.html">Gestión de Funcionarios</a>
             </div>
             <div class="module-card">
-                <a href="documents.html" id="documentsModule">Gestión de Documentos</a>
+                <i class="fas fa-folder-open"></i>
+                <a href="documents.html">Gestión de Documentos</a>
+            </div>
+            <div class="module-card">
+                <i class="fas fa-bell"></i>
+                <a href="#">Notificaciones</a>
+            </div>
+            <div class="module-card">
+                <i class="fas fa-chart-bar"></i>
+                <a href="#">Reportes</a>
             </div>
         </div>
-    </main>
+    </div>
     
+    <!-- Pie de Página -->
+    <footer class="footer">
+        <p>&copy; 2025 Gobierno Autónomo Municipal de Potosí - Sistema de Gestión Documental</p>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </footer>
     <script src="js/app.js"></script>
+    <script>
+        function logout() {
+            alert("Sesión cerrada");
+            window.location.href = "index.html";
+        }
+    </script>
+    
 </body>
 </html>
