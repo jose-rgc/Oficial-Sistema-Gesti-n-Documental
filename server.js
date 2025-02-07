@@ -5,6 +5,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const employeeRoutes = require('./routes/employee');
 const documentRoutes = require('./routes/document');
+const reportRoutes = require('./routes/reports');
 const authenticateToken = require('./middleware/authenticateToken');
 const app = express();
 const port = 3000;
@@ -16,6 +17,7 @@ app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/employees', employeeRoutes);
 app.use('/documents', documentRoutes);
+app.use('/reports', reportRoutes);
 
 mongoose.connect('mongodb://localhost:27017/document-management')
     .then(() => console.log('Conectado a MongoDB'))

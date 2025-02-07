@@ -25,43 +25,65 @@ const upload = multer({
     }
 });
 
-// Ruta para obtener notificaciones
+// Ruta para obtener notificaciones de documentos pendientes y no presentados
+// Ruta para obtener notificaciones de documentos pendientes y no presentados
 router.get('/notifications', authenticateToken, async (req, res) => {
     try {
         const employees = await Employee.find();
-
         const notifications = [];
 
         employees.forEach((employee) => {
             employee.documents.forEach((document, documentType) => {
-                if (document.status === "Pendiente" && document.dueDate) {
+                // Incluir tanto documentos "Pendiente" como "No Presentado"
+                if (document.status === "Pendiente" || document.status === "No Presentado") {
                     const now = new Date();
-                    const dueDate = new Date(document.dueDate);
+                    let dueDate = document.dueDate ? new Date(document.dueDate) : null;
 
-                    const daysLeft = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
-                    if (daysLeft <= 7) {
-                        notifications.push({
-                            funcionario: {
-                                ci: employee.ci,
-                                nombres: employee.nombres,
-                                apellidos: employee.apellidos
-                            },
-                            documento: documentType,
-                            estado: document.status,
-                            fechaLimite: dueDate,
-                            diasRestantes: daysLeft
-                        });
+                    // Si el documento es "No Presentado", no tiene fecha definida
+                    const daysLeft = dueDate ? Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24)) : null;
+
+                    // Determinar prioridad y estado final
+                    let prioridad = "Baja";
+                    let estadoFinal = document.status;
+                    let fechaLimiteTexto = dueDate ? dueDate.toISOString().split('T')[0] : ""; // Fecha en formato YYYY-MM-DD
+
+                    if (document.status === "No Presentado") {
+                        prioridad = "Urgente"; // Siempre urgente si nunca presentó el documento
+                        estadoFinal = "No Presentó";
+                        fechaLimiteTexto = ""; // Sin fecha límite
+                    } else if (daysLeft !== null) {
+                        if (daysLeft <= 3 && daysLeft > 0) {
+                            prioridad = "Alta";
+                        } else if (daysLeft <= 0) {
+                            prioridad = "Vencido";
+                            estadoFinal = "Vencido";
+                        }
                     }
+
+                    notifications.push({
+                        funcionario: {
+                            ci: employee.ci,
+                            nombres: employee.nombres,
+                            apellidos: employee.apellidos
+                        },
+                        documento: documentType,
+                        estado: estadoFinal,
+                        fechaLimite: fechaLimiteTexto, // Vacío si es "No Presentó"
+                        diasRestantes: daysLeft !== null ? daysLeft : "", // Vacío si no aplica
+                        prioridad: prioridad
+                    });
                 }
             });
         });
 
+        console.log("📢 Notificaciones enviadas:", JSON.stringify(notifications, null, 2)); // Verificar en el backend
         res.json(notifications);
     } catch (error) {
         console.error('Error al obtener notificaciones:', error);
         res.status(500).json({ message: 'Error al obtener notificaciones' });
     }
 });
+
 
 // Ruta para obtener documentos de un funcionario
 router.get('/:id', authenticateToken, async (req, res) => {

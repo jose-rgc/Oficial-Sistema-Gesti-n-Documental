@@ -34,7 +34,32 @@ router.get('/', authenticateToken, async (req, res) => {
         res.status(500).json({ message: 'Error al obtener empleados' });
     }
 });
+router.get('/units', async (req, res) => {
+    try {
+        console.log("📌 Solicitando unidades desde MongoDB...");
 
+        // Verificar si existen registros en la base de datos
+        const count = await Employee.countDocuments();
+        if (count === 0) {
+            console.log("⚠ No hay empleados registrados.");
+            return res.status(404).json({ message: "No hay empleados registrados." });
+        }
+
+        // Obtener solo unidades distintas asegurando que existan valores válidos
+        const units = await Employee.find({ unidad: { $exists: true, $ne: "" } }).distinct("unidad");
+
+        if (!units || units.length === 0) {
+            console.log("⚠ No hay unidades disponibles.");
+            return res.status(404).json({ message: "No hay unidades registradas." });
+        }
+
+        console.log("✅ Unidades obtenidas:", units);
+        res.json(units);
+    } catch (error) {
+        console.error("❌ Error al obtener unidades:", error);
+        res.status(500).json({ message: "Error interno al obtener unidades." });
+    }
+});
 
 // Obtener un funcionario por ID
 router.get('/:id', authenticateToken, async (req, res) => {
@@ -106,5 +131,6 @@ router.delete('/:id', authenticateToken, async (req, res) => {
         res.status(500).json({ message: 'Error al eliminar funcionario' });
     }
 });
+// Ruta para obtener todas las unidades únicas de los funcionarios
 
 module.exports = router;

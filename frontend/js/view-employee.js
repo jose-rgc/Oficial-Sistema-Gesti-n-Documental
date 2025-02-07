@@ -254,8 +254,8 @@ function renderDocumentsList(documents) {
         if (documentStatus === "Presento" && filePath) {
             statusDisplay = `✅ <a href="${filePath}" target="_blank">Ver Documento</a>`;
             statusColor = "green";
-        } else if (documentStatus === "Pendiente" && dueDate) {
-            statusDisplay = `⚠️ Pendiente - Fecha Límite: ${dueDate}`;
+        } else if (documentStatus === "Pendiente") {
+            statusDisplay = `⚠️ Pendiente ${dueDate ? "- Fecha Límite: " + dueDate : ""}`;
             statusColor = "orange";
         } else if (documentStatus === "No Presentado") {
             statusDisplay = "❌ No Presentado";
@@ -299,13 +299,32 @@ function updateProgressBar(documents) {
 // Llamar a la función después de renderizar la lista de documentos
 function renderDocumentsList(documents) {
     const tableBody = document.getElementById('documentsTable').querySelector('tbody');
-    tableBody.innerHTML = '';
+    tableBody.innerHTML = ''; // Limpiar la tabla antes de llenarla
 
-    Object.keys(documents).forEach((docKey) => {
+    const documentNames = {
+        carnetIdentidad: "Carnet de Identidad",
+        certificadoNacimiento: "Certificado de Nacimiento",
+        certificadoMatrimonio: "Certificado de Matrimonio",
+        libretaMilitar: "Libreta Militar",
+        croquisDomicilio: "Croquis de Domicilio",
+        curriculum: "Currículum",
+        tituloProvisionNacional: "Título Provisión Nacional",
+        diplomaAcademico: "Diploma Académico",
+        rejap: "Rejap",
+        cenvi: "Cenvi",
+        declaracionNotaria: "Declaración Notaria",
+        certificadoMedico: "Certificado Médico",
+        nit: "NIT",
+        declaracionBienesYRentas: "Declaración de Bienes y Renta",
+        contrato: "Contrato"
+    };
+
+    Object.keys(documentNames).forEach((docKey) => {
         const row = document.createElement('tr');
         const documentData = documents[docKey] || {};
         const documentStatus = documentData.status || "No Presentado";
         const filePath = documentData.filePath || null;
+        const dueDate = documentData.dueDate ? new Date(documentData.dueDate).toLocaleDateString() : null;
 
         let statusDisplay = documentStatus;
         let statusColor = "";
@@ -314,7 +333,7 @@ function renderDocumentsList(documents) {
             statusDisplay = `✅ <a href="${filePath}" target="_blank">Ver Documento</a>`;
             statusColor = "green";
         } else if (documentStatus === "Pendiente") {
-            statusDisplay = `⚠️ Pendiente`;
+            statusDisplay = `⚠️ Pendiente ${dueDate ? `- Fecha Límite: <strong>${dueDate}</strong>` : ""}`;
             statusColor = "orange";
         } else if (documentStatus === "No Presentado") {
             statusDisplay = "❌ No Presentado";
@@ -325,15 +344,12 @@ function renderDocumentsList(documents) {
         }
 
         row.innerHTML = `
-            <td>${docKey.replace(/([A-Z])/g, ' $1')}</td>
+            <td>${documentNames[docKey]}</td>
             <td style="color: ${statusColor}; font-weight: bold;">${statusDisplay}</td>
         `;
 
         tableBody.appendChild(row);
     });
-
-    // Actualizar la barra de progreso después de renderizar la tabla
-    updateProgressBar(documents);
 }
 
 // Llamar a la función al cargar la página
