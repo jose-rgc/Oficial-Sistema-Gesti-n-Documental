@@ -288,6 +288,31 @@ async function deleteEmployee(employeeId) {
         console.error('Error al eliminar funcionario:', error);
     }
 }
+// Función para filtrar empleados por nombre, apellido, cargo o unidad
+function filterEmployees() {
+    const searchText = document.getElementById('searchInput').value.toLowerCase();
+    
+    const rows = document.querySelectorAll('#employeesTable tbody tr');
 
+    rows.forEach(row => {
+        const ci = row.cells[0].textContent.toLowerCase();
+        const nombres = row.cells[1].textContent.toLowerCase();
+        const apellidos = row.cells[2].textContent.toLowerCase();
+        const cargo = row.cells[3].textContent.toLowerCase();
+        const unidad = row.cells[4].textContent.toLowerCase();
+
+        const matchesSearch = 
+            ci.includes(searchText) ||
+            nombres.includes(searchText) ||
+            apellidos.includes(searchText) ||
+            cargo.includes(searchText) ||
+            unidad.includes(searchText);
+
+        row.style.display = matchesSearch ? "" : "none";
+    });
+}
+
+// Agregar evento a la barra de búsqueda
+document.getElementById('searchInput').addEventListener('keyup', filterEmployees);
 // Cargar funcionarios al inicio
 loadEmployees();

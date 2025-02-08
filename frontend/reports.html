@@ -52,6 +52,19 @@
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
+        .back-button {
+            background-color: var(--button-yellow);
+            color: black;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.3s;
+        }
+
 
         /* Filtros */
         .filters {
@@ -121,8 +134,8 @@
 </head>
 <body>
     <header class="dashboard-header">
+        <a href="dashboard.html" class="back-button">🔙 Volver</a>
         <h1>Reportes de Documentos Incompletos</h1>
-        <a href="dashboard.html" class="back-button">Volver al Dashboard</a>
     </header>
     
     <main class="dashboard-main">
@@ -164,7 +177,16 @@
 <canvas id="chartByDocument"></canvas>
 </div>
     </main>
-    
+        <!-- Pie de Página -->
+        <footer class="footer">
+            <p>&; 2025 Gobierno Autónomo Municipal de Potosí - Sistema de Gestión Documental</p>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.14/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

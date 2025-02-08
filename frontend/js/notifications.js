@@ -14,24 +14,29 @@ async function loadNotifications() {
             throw new Error('Error al obtener notificaciones');
         }
 
-        const notifications = await response.json();
+        let notifications = await response.json();
         console.log('📥 Notificaciones obtenidas:', notifications);
 
-        // Referencia a la tabla
+        // Ordenar por prioridad (Vencidos -> Urgentes -> Pendientes)
+        notifications.sort((a, b) => {
+            const dateA = new Date(a.fechaLimite);
+            const dateB = new Date(b.fechaLimite);
+            return dateA - dateB;
+        });
+
         const tbody = document.getElementById('notificationsTable').querySelector('tbody');
-        tbody.innerHTML = ''; // Limpiar la tabla antes de llenarla
+        tbody.innerHTML = '';
 
         notifications.forEach(notification => {
             const row = document.createElement('tr');
 
-            // Calcular los días restantes
             const today = new Date();
             const dueDate = new Date(notification.fechaLimite);
             const daysLeft = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
 
-            // Determinar el estado
             let statusText = "Pendiente";
             let statusClass = "pending";
+
             if (daysLeft <= 3 && daysLeft > 0) {
                 statusText = "Urgente";
                 statusClass = "urgent";
@@ -47,44 +52,34 @@ async function loadNotifications() {
                 <td>${daysLeft} días</td>
                 <td class="${statusClass}">${statusText}</td>
                 <td>
-                    <button class="notify-button" data-id="${notification.funcionario.ci}" data-doc="${notification.documento}">🔔 Notificar</button>
-                    <button class="call-button" data-id="${notification.funcionario.ci}" data-doc="${notification.documento}">📞 Llamar</button>
+                    <button class="notify-button">🔔 Notificar</button>
+                    <button class="call-button">📞 Llamar</button>
                 </td>
             `;
 
             tbody.appendChild(row);
         });
 
-        // Agregar eventos a los botones de acción
-        document.querySelectorAll('.notify-button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const funcionarioCI = e.target.dataset.id;
-                const documento = e.target.dataset.doc;
-                notifyUser(funcionarioCI, documento);
-            });
-        });
-
-        document.querySelectorAll('.call-button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const funcionarioCI = e.target.dataset.id;
-                const documento = e.target.dataset.doc;
-                registerCall(funcionarioCI, documento);
-            });
-        });
-
     } catch (error) {
         console.error('❌ Error al cargar notificaciones:', error);
     }
 }
+function filterTable() {
+    const searchValue = document.getElementById('searchInput').value.toLowerCase();
+    const statusValue = document.getElementById('statusFilter').value;
+    const rows = document.querySelectorAll('#notificationsTable tbody tr');
 
-// Función para notificar al usuario (ejemplo de WhatsApp)
-function notifyUser(funcionarioCI, documento) {
-    alert(`📩 Se enviará un recordatorio sobre el documento: ${documento} para el funcionario con CI: ${funcionarioCI}`);
-}
-
-// Función para registrar una llamada
-function registerCall(funcionarioCI, documento) {
-    alert(`📞 Se registrará una llamada sobre el documento: ${documento} para el funcionario con CI: ${funcionarioCI}`);
+    rows.forEach(row => {
+        const name = row.cells[0].textContent.toLowerCase();
+        const document = row.cells[1].textContent.toLowerCase();
+        const status = row.cells[4].classList.contains(statusValue) || !statusValue;
+        
+        if ((name.includes(searchValue) || document.includes(searchValue)) && status) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
 }
 
 // Cargar notificaciones al cargar la página

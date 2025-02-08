@@ -65,6 +65,26 @@ async function loadEmployeesForDocuments() {
     });
        
 }
+// Función para filtrar la tabla en tiempo real
+function filterTable() {
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    let table = document.getElementById("documentsTable");
+    let rows = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < rows.length; i++) {
+        let cells = rows[i].getElementsByTagName("td");
+        let found = false;
+
+        for (let j = 0; j < cells.length - 1; j++) { // Excluir columna de acciones
+            if (cells[j].innerText.toLowerCase().includes(input)) {
+                found = true;
+                break;
+            }
+        }
+
+        rows[i].style.display = found ? "" : "none";
+    }
+}
 // Llamar a la función al cargar la página
 loadEmployeesForDocuments();
 

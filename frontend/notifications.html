@@ -3,12 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notificaciones de Documentos</title>
+    <title>📢 Notificaciones de Documentos Pendientes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* Paleta de colores */
+        :root {
+            --primary-color: #004085;
+            --secondary-color: #007bff;
+            --background-color: #f4f6f9;
+            --card-color: #ffffff;
+            --text-color: #333;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+            --hover-color: #003366;
+            --input-bg: #fff;
+        }
+
         /* Estilos generales */
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #004085, #002752);
+            font-family: 'Poppins', sans-serif;
+            background: var(--background-color);
             margin: 0;
             padding: 0;
             display: flex;
@@ -16,29 +31,54 @@
             align-items: center;
             justify-content: flex-start;
             min-height: 100vh;
-            color: #333;
+            color: var(--text-color);
         }
 
-        /* Header */
+        /* Encabezado */
         .dashboard-header {
-            background-color: #004085;
+            background: linear-gradient(135deg, var(--primary-color), #002752);
             color: white;
-            padding: 15px;
+            padding: 15px 20px;
             width: 100%;
             text-align: center;
-            font-size: 18px;
+            font-size: 22px;
             font-weight: bold;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .dashboard-header a {
-            color: #ffc107;
+        .dashboard-header h1 {
+            flex: 1;
+            text-align: center;
+            margin: 0;
+        }
+
+        /* Botón de volver */
+        .back-button {
+            background-color: var(--warning-color);
+            color: black;
+            padding: 8px 15px;
+            border-radius: 6px;
             text-decoration: none;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
         }
 
-        .dashboard-header a:hover {
-            text-decoration: underline;
+        .back-button i {
+            font-size: 18px;
+        }
+
+        .back-button:hover {
+            background-color: #e0a800;
+            transform: scale(1.05);
         }
 
         /* Contenedor principal */
@@ -46,94 +86,136 @@
             margin-top: 20px;
             text-align: center;
             width: 90%;
-            max-width: 900px;
-            background: white;
-            padding: 20px;
+            max-width: 1000px;
+            background: var(--card-color);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Buscador y filtros */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--card-color);
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .filter-container input,
+        .filter-container select {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+            background: var(--input-bg);
+        }
+
+        .filter-container input:focus,
+        .filter-container select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(0, 64, 133, 0.3);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-box i {
+            font-size: 18px;
+            color: var(--primary-color);
         }
 
         /* Tabla */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 15px;
             background-color: white;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         th {
-            background-color: #004085;
+            background: var(--primary-color);
             color: white;
+            font-weight: bold;
+            text-align: left;
+            padding: 12px;
         }
 
-        /* Estilos para estados de documentos */
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Estados */
         .pending {
-            background-color: #ffc107;
+            background-color: var(--warning-color);
             color: black;
             font-weight: bold;
-            padding: 5px;
-            border-radius: 4px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            text-align: center;
+            display: inline-block;
         }
 
         .urgent {
-            background-color: #dc3545;
+            background-color: var(--danger-color);
             color: white;
             font-weight: bold;
-            padding: 5px;
-            border-radius: 4px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            text-align: center;
+            display: inline-block;
         }
 
         .expired {
             background-color: black;
             color: white;
             font-weight: bold;
-            padding: 5px;
-            border-radius: 4px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            text-align: center;
+            display: inline-block;
         }
 
-        /* Botones de acción */
-        .notify-button, .call-button {
-            padding: 7px 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .notify-button {
-            background-color: #17a2b8;
-            color: white;
-        }
-
-        .call-button {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .notify-button:hover {
-            background-color: #138496;
-        }
-
-        .call-button:hover {
-            background-color: #218838;
-        }
     </style>
 </head>
 <body>
     <header class="dashboard-header">
-        <h1>Notificaciones de Documentos Pendientes</h1>
-        <a href="dashboard.html" class="back-button">Volver al Dashboard</a>
+        <a href="dashboard.html" class="back-button"><i class="fas fa-arrow-left"></i> Volver</a>
+        <h1>📢 Notificaciones de Documentos Pendientes</h1>
     </header>
-    
+
+    <div class="filter-container">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Buscar funcionario o documento..." onkeyup="filterTable()">
+        </div>
+        <select id="statusFilter" onchange="filterTable()">
+            <option value="">📌 Todos</option>
+            <option value="pending">⚠ Pendiente</option>
+            <option value="urgent">⏳ Urgente</option>
+            <option value="expired">❌ Vencido</option>
+        </select>
+    </div>
+
     <main class="dashboard-main">
-        <h2>Documentos Pendientes y Vencidos</h2>
+        <h2>📜 Documentos Pendientes y Vencidos</h2>
         <table id="notificationsTable">
             <thead>
                 <tr>
@@ -146,11 +228,15 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Aquí se llenarán los datos dinámicamente con JavaScript -->
+                <!-- Se llenarán los datos dinámicamente con JavaScript -->
             </tbody>
         </table>
     </main>
+        <!-- Pie de Página -->
+        <footer class="footer">
+            <p>&copy; 2025 Gobierno Autónomo Municipal de Potosí - Sistema de Gestión Documental</p>
 
-    <script src="js/notifications.js"></script> <!-- Script separado -->
+        </footer>
+    <script src="js/notifications.js"></script>
 </body>
 </html>
