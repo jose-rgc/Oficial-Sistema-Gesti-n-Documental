@@ -93,10 +93,12 @@ async function generateReport() {
                 <td>${row.funcionario.nombres} ${row.funcionario.apellidos}</td>
                 <td>${row.funcionario.unidad}</td>
                 <td>${row.documento}</td>
+                <td>${row.fechaLimite}</td> <!-- Mostrar fecha límite -->
                 <td class="${statusClass}">${row.estado}</td>
             `;
             tbody.appendChild(tr);
         });
+        loadStatistics();
 
     } catch (error) {
         console.error('❌ Error al obtener el reporte:', error);
@@ -122,6 +124,94 @@ function exportToPDF() {
 
     // Guardar el PDF
     doc.save('Reporte_Documentos_Incompletos.pdf');
+}
+// Función para cargar las estadísticas y generar gráficos
+async function loadStatistics() {
+    try {
+        const response = await fetch(`${apiBaseUrl}/reports/statistics`);
+        if (!response.ok) {
+            throw new Error('Error al obtener estadísticas');
+        }
+
+        const data = await response.json();
+        console.log("📊 Datos para gráficos:", data);
+
+        if (Object.keys(data.statsByUnit).length === 0 && Object.keys(data.statsByDocument).length === 0) {
+            console.warn("⚠ No hay suficientes datos para generar gráficos.");
+            return; // Evita errores si no hay datos
+        }
+
+        // Verificar si los elementos <canvas> existen
+        const chartByUnitCanvas = document.getElementById('chartByUnit');
+        const chartByDocumentCanvas = document.getElementById('chartByDocument');
+
+        if (!chartByUnitCanvas || !chartByDocumentCanvas) {
+            console.error("❌ No se encontraron los elementos canvas para los gráficos.");
+            return;
+        }
+
+        // 🔹 Verificar si los gráficos existen antes de intentar destruirlos
+        if (window.chartByUnit instanceof Chart) {
+            window.chartByUnit.destroy();
+        }
+        if (window.chartByDocument instanceof Chart) {
+            window.chartByDocument.destroy();
+        }
+
+        // Gráfico por Unidad
+        const ctx1 = chartByUnitCanvas.getContext('2d');
+        window.chartByUnit = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(data.statsByUnit),
+                datasets: [{
+                    label: 'Documentos Faltantes por Unidad',
+                    data: Object.values(data.statsByUnit),
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                    title: { display: true, text: 'Documentos Faltantes por Unidad' }
+                }
+            }
+        });
+
+        // Gráfico por Tipo de Documento
+        const ctx2 = chartByDocumentCanvas.getContext('2d');
+        window.chartByDocument = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(data.statsByDocument),
+                datasets: [{
+                    label: 'Documentos Faltantes por Tipo',
+                    data: Object.values(data.statsByDocument),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: true, text: 'Documentos Faltantes por Tipo' }
+                }
+            }
+        });
+
+    } catch (error) {
+        console.error('❌ Error al obtener estadísticas:', error);
+    }
 }
 // Cargar las unidades y documentos al iniciar la página
 loadUnits();

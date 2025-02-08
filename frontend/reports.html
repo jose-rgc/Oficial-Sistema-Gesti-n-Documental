@@ -138,15 +138,14 @@
             </select>
 
             <button onclick="generateReport()">Generar Reporte</button>
-        </div>
 
-        <h2>Resultados del Reporte</h2>
         <table id="reportTable">
             <thead>
                 <tr>
                     <th>Funcionario</th>
                     <th>Unidad</th>
                     <th>Documento Faltante</th>
+                    <th>Fecha Límite</th>
                     <th>Estado</th>
                 </tr>
             </thead>
@@ -156,11 +155,19 @@
         </table>
 
         <button class="export-button" onclick="exportToPDF()">📄 Exportar a PDF</button>
+    </div>
+
+    <h2>Resultados del Reporte</h2>
+    <h2>Estadísticas</h2>
+<div class="charts-container">
+<canvas id="chartByUnit"></canvas>
+<canvas id="chartByDocument"></canvas>
+</div>
     </main>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.14/jspdf.plugin.autotable.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/reports.js"></script>
 </body>
 </html>
