@@ -63,3 +63,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+function togglePassword(inputId, iconElement) {
+    const passwordField = document.getElementById(inputId);
+
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        iconElement.textContent = "🙈"; // Cambiar icono a "ocultar"
+    } else {
+        passwordField.type = "password";
+        iconElement.textContent = "👁️"; // Cambiar icono a "ver"
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('authToken');
+
+    if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const userRole = payload.role;
+
+        // Validar acceso al módulo Gestión de Usuarios
+        const usersModule = document.querySelector('.module-card a[href="users.html"]');
+
+        if (usersModule) {
+            usersModule.addEventListener('click', (event) => {
+                if (userRole !== 'admin' && userRole !== 'developer') {
+                    event.preventDefault(); // Evita que la página se cargue
+                    alert('No estás autorizado para acceder a este módulo.');
+                }
+            });
+        }
+    }
+});

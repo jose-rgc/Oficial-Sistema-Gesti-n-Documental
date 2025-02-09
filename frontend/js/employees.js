@@ -10,7 +10,9 @@ async function loadEmployees() {
         window.location.href = 'index.html';
         return;
     }
-
+    // Obtener rol del usuario autenticado
+    const payload = JSON.parse(atob(token.split('.')[1])); 
+    const userRole = payload.role;
     try {
         const response = await fetch(`${apiBaseUrl}/employees`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -44,6 +46,10 @@ async function loadEmployees() {
         document.querySelectorAll('.edit-button').forEach((button) => {
             button.addEventListener('click', (e) => {
                 const employeeId = e.target.dataset.id;
+                if (userRole === 'user') {
+                    alert('No tienes permiso para editar funcionarios.');
+                    return;
+                }
                 openEmployeeModal(employeeId);
             });
         });
@@ -51,6 +57,10 @@ async function loadEmployees() {
         document.querySelectorAll('.delete-button').forEach((button) => {
             button.addEventListener('click', (e) => {
                 const employeeId = e.target.dataset.id;
+                if (userRole === 'user') {
+                    alert('No tienes permiso para eliminar funcionarios.');
+                    return;
+                }
                 deleteEmployee(employeeId);
             });
         });
@@ -134,6 +144,7 @@ async function createEmployee() {
     const fechaInicioField = document.getElementById('fechaInicioContrato');
     const fechaFinField = document.getElementById('fechaFinContrato');
 
+
     // Asegurar que ningún campo sea nulo
     if (!ciField || !nombresField || !apellidosField || !cargoField || !unidadField || !fechaInicioField || !fechaFinField) {
         console.error('Uno o más campos no existen en el DOM.');
@@ -155,6 +166,16 @@ async function createEmployee() {
         alert('Todos los campos son obligatorios.');
         return;
     }
+        // ✅ Llamar a la función de validación antes de enviar los datos
+        if (!validateEmployeeFields(ci, nombres, apellidos, cargo, unidad, fechaInicioContrato, fechaFinContrato)) {
+            return; // 🚫 No se envían los datos si la validación falla
+        }
+            // 🚨 **Verificar si el CI ya existe**
+            const ciExists = await checkIfCIExists(ci);
+            if (ciExists) {
+                alert('Error: Ya existe un funcionario con este CI.');
+                return;
+            }
 
     try {
         const token = localStorage.getItem('authToken');
@@ -189,6 +210,15 @@ async function createEmployee() {
 
 
 document.getElementById('addEmployeeButton').addEventListener('click', () => {
+    const token = localStorage.getItem('authToken');
+    const payload = JSON.parse(atob(token.split('.')[1])); 
+    const userRole = payload.role;
+
+    if (userRole === 'user') {
+        alert('No tienes permiso para agregar funcionarios.');
+        return;
+    }
+
     const modal = document.getElementById('employeeModal');
     const modalTitle = document.getElementById('employeeModalTitle');
     const employeeForm = document.getElementById('employeeForm');
@@ -202,20 +232,15 @@ document.getElementById('addEmployeeButton').addEventListener('click', () => {
     document.getElementById('fechaInicioContrato').value = '';
     document.getElementById('fechaFinContrato').value = '';
 
-    // Cambiar el título del modal
     modalTitle.textContent = 'Agregar Funcionario';
 
-    // Asignar función de creación al evento submit del formulario
     employeeForm.onsubmit = (e) => {
         e.preventDefault();
-        console.log('Formulario enviado. Verificando campos...');
-        createEmployee(); // Llamar a la función para crear un funcionario
+        createEmployee();
     };
 
-    // Mostrar el modal
     modal.classList.add('show');
 });
-
 
 
 // Función para actualizar un funcionario
@@ -231,6 +256,16 @@ async function updateEmployee(employeeId) {
     console.log('Datos enviados al backend para actualizar:', {
         ci, nombres, apellidos, cargo, unidad, fechaInicioContrato, fechaFinContrato
     });
+     // ✅ Llamar a la función de validación antes de enviar los datos
+     if (!validateEmployeeFields(ci, nombres, apellidos, cargo, unidad, fechaInicioContrato, fechaFinContrato)) {
+        return; // 🚫 No se envían los datos si la validación falla
+    }
+    // 🚨 **Verificar si el CI ya está en uso por otro funcionario**
+    const ciExists = await checkIfCIExists(ci, employeeId);
+    if (ciExists) {
+        alert('Error: Ya existe otro funcionario con este CI.');
+        return;
+    }
 
     try {
         const token = localStorage.getItem('authToken');
@@ -314,5 +349,64 @@ function filterEmployees() {
 
 // Agregar evento a la barra de búsqueda
 document.getElementById('searchInput').addEventListener('keyup', filterEmployees);
+// ✅ Función para validar los datos del funcionario antes de enviarlo
+function validateEmployeeFields(ci, nombres, apellidos, cargo, unidad, fechaInicioContrato, fechaFinContrato) {
+    // ✅ Validación del CI (debe ser números con un posible sufijo alfanumérico)
+    const ciRegex = /^[0-9]{5,10}(-[0-9A-Z]{1,3})?$/;
+    if (!ciRegex.test(ci)) {
+        alert('El CI debe tener entre 5 y 10 dígitos y puede incluir un sufijo opcional (Ejemplo: 8620805-1F).');
+        return false;
+    }
+
+    // ✅ Validación de nombres y apellidos (solo letras y espacios, mínimo 3 caracteres)
+    const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{3,50}$/;
+    if (!nameRegex.test(nombres)) {
+        alert('El campo "Nombres" solo puede contener letras y espacios (mínimo 3 caracteres).');
+        return false;
+    }
+    if (!nameRegex.test(apellidos)) {
+        alert('El campo "Apellidos" solo puede contener letras y espacios (mínimo 3 caracteres).');
+        return false;
+    }
+
+    // ✅ Validación de cargo y unidad (solo letras, números y espacios, mínimo 3 caracteres)
+    const textRegex = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ]{3,50}$/;
+    if (!textRegex.test(cargo)) {
+        alert('El campo "Cargo" solo puede contener letras, números y espacios (mínimo 3 caracteres).');
+        return false;
+    }
+    if (!textRegex.test(unidad)) {
+        alert('El campo "Unidad" solo puede contener letras, números y espacios (mínimo 3 caracteres).');
+        return false;
+    }
+
+    // ✅ Validación de fechas (fecha de inicio debe ser menor o igual a fecha de fin)
+    if (fechaInicioContrato && fechaFinContrato && fechaInicioContrato > fechaFinContrato) {
+        alert('La fecha de inicio no puede ser mayor que la fecha de fin del contrato.');
+        return false;
+    }
+
+    return true; // ✅ Todo correcto
+}
+async function checkIfCIExists(ci, employeeId = null) {
+    try {
+        const token = localStorage.getItem('authToken');
+        const response = await fetch(`${apiBaseUrl}/employees?ci=${ci}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al verificar el CI');
+        }
+
+        const employees = await response.json();
+
+        // Si encuentra un empleado con el mismo CI y no es el mismo usuario que está editando, retorna true (existe)
+        return employees.some(emp => emp.ci === ci && emp._id !== employeeId);
+    } catch (error) {
+        console.error('Error al verificar CI:', error);
+        return false; // Por defecto, evitar bloqueos si hay un error
+    }
+}
 // Cargar funcionarios al inicio
 loadEmployees();

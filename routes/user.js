@@ -1,11 +1,11 @@
 const express = require('express');
 const User = require('../models/User');
 const authenticateToken = require('../middleware/authenticateToken');
+const authorizeRole = require('../middleware/authorizeRole');
 const router = express.Router();
 
-// Obtener todos los usuarios
-// Obtener un usuario por ID
-router.get('/:id', authenticateToken, async (req, res) => {
+// Obtener todos los usuarios (Solo admin y developer)
+router.get('/:id', authenticateToken,authorizeRole('admin', 'developer'), async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -22,7 +22,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 
 
 // Crear un nuevo usuario
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken, authorizeRole('admin', 'developer'), async (req, res) => {
     const { username, password, role } = req.body;
     const newUser = new User({ username, password, role });
     try {
@@ -34,7 +34,7 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 // Editar un usuario
-router.put('/:id', authenticateToken, async (req, res) => {
+router.put('/:id', authenticateToken,authorizeRole('admin', 'developer'), async (req, res) => {
     const { id } = req.params;
     const { username, role } = req.body;
     try {
@@ -46,7 +46,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
 });
 
 // Eliminar un usuario
-router.delete('/:id', authenticateToken, async (req, res) => {
+router.delete('/:id', authenticateToken,authorizeRole('admin', 'developer'), async (req, res) => {
     const { id } = req.params;
     try {
         await User.findByIdAndDelete(id);
@@ -56,7 +56,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     }
 });
 // Obtener todos los usuarios
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', authenticateToken,authorizeRole('admin', 'developer'), async (req, res) => {
     try {
         const users = await User.find({}, 'username role'); // Solo devolver 'username' y 'role'
         res.json(users);

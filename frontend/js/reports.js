@@ -138,10 +138,9 @@ async function loadStatistics() {
 
         if (Object.keys(data.statsByUnit).length === 0 && Object.keys(data.statsByDocument).length === 0) {
             console.warn("⚠ No hay suficientes datos para generar gráficos.");
-            return; // Evita errores si no hay datos
+            return;
         }
 
-        // Verificar si los elementos <canvas> existen
         const chartByUnitCanvas = document.getElementById('chartByUnit');
         const chartByDocumentCanvas = document.getElementById('chartByDocument');
 
@@ -150,7 +149,6 @@ async function loadStatistics() {
             return;
         }
 
-        // 🔹 Verificar si los gráficos existen antes de intentar destruirlos
         if (window.chartByUnit instanceof Chart) {
             window.chartByUnit.destroy();
         }
@@ -158,7 +156,7 @@ async function loadStatistics() {
             window.chartByDocument.destroy();
         }
 
-        // Gráfico por Unidad
+        // **Gráfico de barras mejorado con valores sobre las barras**
         const ctx1 = chartByUnitCanvas.getContext('2d');
         window.chartByUnit = new Chart(ctx1, {
             type: 'bar',
@@ -167,8 +165,8 @@ async function loadStatistics() {
                 datasets: [{
                     label: 'Documentos Faltantes por Unidad',
                     data: Object.values(data.statsByUnit),
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
                 }]
             },
@@ -176,26 +174,39 @@ async function loadStatistics() {
                 responsive: true,
                 plugins: {
                     legend: { display: true },
-                    title: { display: true, text: 'Documentos Faltantes por Unidad' }
+                    title: { display: true, text: 'Documentos Faltantes por Unidad' },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return ` ${context.raw} documentos`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
                 }
             }
         });
 
-        // Gráfico por Tipo de Documento
+        // **Gráfico de pastel con porcentajes**
+        const totalDocs = Object.values(data.statsByDocument).reduce((a, b) => a + b, 0);
         const ctx2 = chartByDocumentCanvas.getContext('2d');
         window.chartByDocument = new Chart(ctx2, {
-            type: 'pie',
+            type: 'doughnut',
             data: {
                 labels: Object.keys(data.statsByDocument),
                 datasets: [{
                     label: 'Documentos Faltantes por Tipo',
                     data: Object.values(data.statsByDocument),
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 206, 86, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(153, 102, 255, 0.5)'
+                        '#ff6384', '#36a2eb', '#ffce56', '#4bc0c0',
+                        '#9966ff', '#ff9f40', '#ff6384', '#c9cbcf'
                     ],
                     borderWidth: 1
                 }]
@@ -203,8 +214,16 @@ async function loadStatistics() {
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { position: 'top' },
-                    title: { display: true, text: 'Documentos Faltantes por Tipo' }
+                    legend: { position: 'right' },
+                    title: { display: true, text: 'Distribución de Documentos Faltantes' },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                let percentage = ((context.raw / totalDocs) * 100).toFixed(2);
+                                return ` ${context.label}: ${context.raw} (${percentage}%)`;
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -212,6 +231,23 @@ async function loadStatistics() {
     } catch (error) {
         console.error('❌ Error al obtener estadísticas:', error);
     }
+}
+function updateSummary(stats) {
+    // Total de documentos faltantes
+    const totalMissing = Object.values(stats.statsByDocument).reduce((a, b) => a + b, 0);
+    document.getElementById("totalDocuments").querySelector("span").textContent = totalMissing;
+
+    // Unidad con más documentos faltantes
+    const mostPendingUnit = Object.keys(stats.statsByUnit).reduce((a, b) => 
+        stats.statsByUnit[a] > stats.statsByUnit[b] ? a : b, "---"
+    );
+    document.getElementById("mostPendingUnit").querySelector("span").textContent = mostPendingUnit;
+
+    // Documento más faltante
+    const mostPendingDoc = Object.keys(stats.statsByDocument).reduce((a, b) => 
+        stats.statsByDocument[a] > stats.statsByDocument[b] ? a : b, "---"
+    );
+    document.getElementById("mostPendingDocument").querySelector("span").textContent = mostPendingDoc;
 }
 // Cargar las unidades y documentos al iniciar la página
 loadUnits();

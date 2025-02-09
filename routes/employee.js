@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Employee = require('../models/Employee');
 const authenticateToken = require('../middleware/authenticateToken');
+const authorizeRole = require('../middleware/authorizeRole');
 const router = express.Router();
 
 // Obtener todos los funcionarios
@@ -82,7 +83,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 });
 
 // Crear un nuevo funcionario
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken,authorizeRole('admin', 'developer'), async (req, res) => {
     const { ci, nombres, apellidos, cargo, unidad, fechaInicioContrato, fechaFinContrato } = req.body;
 
     const newEmployee = new Employee({
@@ -104,7 +105,7 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 // Editar un funcionario
-router.put('/:id', authenticateToken, async (req, res) => {
+router.put('/:id', authenticateToken,authorizeRole('admin', 'developer'), async (req, res) => {
     const { id } = req.params;
     const { ci, nombres, apellidos, cargo, unidad, fechaInicioContrato, fechaFinContrato } = req.body;
 
@@ -121,7 +122,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
 });
 
 // Eliminar un funcionario
-router.delete('/:id', authenticateToken, async (req, res) => {
+router.delete('/:id', authenticateToken,authorizeRole('admin', 'developer'), async (req, res) => {
     const { id } = req.params;
 
     try {

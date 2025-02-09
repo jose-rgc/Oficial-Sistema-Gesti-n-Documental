@@ -4,6 +4,9 @@ const apiBaseUrl = 'http://localhost:3000';
 // Función para cargar funcionarios en la gestión de documentos
 async function loadEmployeesForDocuments() {
     const token = localStorage.getItem('authToken');
+        // Decodificar el token para obtener el rol del usuario
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const userRole = payload.role; // Obtiene el rol del usuario
     try {
         const response = await fetch(`${apiBaseUrl}/employees`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -52,8 +55,13 @@ async function loadEmployeesForDocuments() {
     document.querySelectorAll('.upload-documents-button').forEach((button) => {
         button.addEventListener('click', (e) => {
             const employeeId = e.target.dataset.id;
-            console.log('ID enviado a upload-documents:', employeeId);
-            window.location.href = `upload-documents.html?id=${employeeId}`; // Redirige a la página
+
+                // Si el usuario es Admin, mostrar mensaje de error en lugar de redirigir
+                if (userRole === 'admin') {
+                    alert('No tienes permiso para subir documentos.');
+                } else {
+                    window.location.href = `upload-documents.html?id=${employeeId}`;
+                }
         });
     });
     document.querySelectorAll('.view-documents-button').forEach((button) => {

@@ -208,30 +208,30 @@
         }
         /* Botón de cerrar mejorado */
         #closeModal {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
-    color: #dc3545;
-    border: none;
-    font-size: 22px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
-    width: 32px; /* Ajusta el tamaño del área de clic */
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            color: #dc3545;
+            border: none;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+            width: 32px; /* Ajusta el tamaño del área de clic */
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
 
-/* Al pasar el mouse */
-#closeModal:hover {
-    color: #a71d2a;
-    background: rgba(220, 53, 69, 0.2); /* Efecto visual al pasar el mouse */
-    transform: scale(1.2);
-}
+        /* Al pasar el mouse */
+        #closeModal:hover {
+            color: #a71d2a;
+            background: rgba(220, 53, 69, 0.2); /* Efecto visual al pasar el mouse */
+            transform: scale(1.2);
+        }
 
         .modal-content label {
             display: block;
@@ -297,33 +297,22 @@
         .modal-content button#closeModal:hover {
             color: #a71d2a;
             transform: scale(1.2);
-}
-
-        /* Notificación */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 5px;
-            background-color: #28a745;
-            color: white;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-20px);
-            transition: all 0.3s ease;
-            z-index: 9999;
         }
 
-        .notification.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+                /* Notificación */
+                .notification {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px 15px;
+            background: #28a745;
+            color: white;
+            border-radius: 5px;
+            display: none;
         }
 
         .notification.error {
-            background-color: #dc3545;
+            background: #dc3545;
         }
 
     </style>
@@ -361,13 +350,19 @@
                 <label for="username">Usuario:</label>
                 <input type="text" id="username" name="username" required>
     
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password">
+            <div class="input-group">
+                <label for="password">Contraseña</label>
+                <div class="password-container">
+                    <input type="password" id="password" name="password">
+                    <span class="toggle-password" onclick="togglePassword('password', this)">👁️</span>
+                </div>
+            </div>
     
                 <label for="role">Rol:</label>
                 <select id="role" name="role" required>
                     <option value="admin">Admin</option>
                     <option value="user">User</option>
+                    <option value="developer">Developer</option>
                 </select>
     
                 <button type="submit">Guardar</button>

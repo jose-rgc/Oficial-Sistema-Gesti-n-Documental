@@ -4,7 +4,11 @@ const bcrypt = require('bcrypt');
 const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, required: true } // e.g., 'admin', 'user'
+    role: { 
+        type: String, 
+        required: true,
+        enum: ['admin', 'user', 'developer'] // ✅ Agregar el nuevo rol
+    }
 });
 
 // Hash la contraseña antes de guardar
@@ -17,3 +21,4 @@ UserSchema.pre('save', async function(next) {
 
 const User = mongoose.model('User', UserSchema);
 module.exports = User;
+

@@ -18,7 +18,34 @@
             min-height: 100vh;
             color: #333;
         }
+        /* 🔍 Contenedor de filtros */
+.filters-container {
+    background: #ffffff;
+    color: #333;
+    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
 
+/* 🎨 Selects */
+.filters-container select {
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.filters-container select:hover {
+    border-color: #007bff;
+}
         /* Header */
         .dashboard-header {
             background-color: #004085;
@@ -75,14 +102,17 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            background: white;
+            color: #333;
             margin-top: 20px;
-            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         th, td {
-            border: 1px solid #ddd;
             padding: 10px;
             text-align: center;
+            border-bottom: 1px solid #ddd;
         }
 
         th {
@@ -90,7 +120,15 @@
             color: white;
         }
 
-        /* Estilos para estados de documentos */
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e9ecef;
+        }
+
+                /* 🚦 Estados de Documentos */
         .pending {
             background-color: #ffc107;
             color: black;
@@ -130,6 +168,67 @@
         .export-button:hover {
             background-color: #218838;
         }
+        /* Contenedor de gráficos */
+        .charts-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa; /* Fondo suave para destacar la sección */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Ajuste de tamaño de los gráficos */
+        canvas {
+            max-width: 450px;  /* Aumentar tamaño pero controlado */
+            max-height: 350px;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+        }
+        /* Estilo para el contenedor de filtros */
+        .filters-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Estilo para los select */
+        .filters-container select {
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background-color: white;
+        }
+
+        /* Botón Generar Reporte */
+        .generate-report-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .generate-report-btn:hover {
+            background-color: #0056b3;
+        }
+
     </style>
 </head>
 <body>
@@ -140,17 +239,17 @@
     
     <main class="dashboard-main">
         <div class="filters">
-            <label for="unidad">Seleccionar Unidad:</label>
+            <label for="unidad">📌 Seleccionar Unidad:</label>
             <select id="unidad">
                 <option value="">-- Todas las Unidades --</option>
             </select>
 
-            <label for="documento">Seleccionar Documento:</label>
+            <label for="documento">📄 Seleccionar Documento:</label>
             <select id="documento">
                 <option value="">-- Todos los Documentos --</option>
             </select>
 
-            <button onclick="generateReport()">Generar Reporte</button>
+            <button onclick="generateReport()">📊 Generar Reporte</button>
 
         <table id="reportTable">
             <thead>

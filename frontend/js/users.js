@@ -1,6 +1,28 @@
 // URL base del backend
 const apiBaseUrl = 'http://localhost:3000';
 
+document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        alert('No estás autenticado');
+        window.location.href = 'index.html'; // Redirigir a la página de login
+        return;
+    }
+
+    try {
+        const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decodificar el token JWT
+
+        // Si el usuario no es admin ni developer, lo redirige al dashboard
+        if (decodedToken.role !== 'admin' && decodedToken.role !== 'developer') {
+            alert('No tienes permiso para acceder a esta sección.');
+            window.location.href = 'dashboard.html'; // Redirigir al dashboard o a otra página
+        }
+    } catch (error) {
+        console.error('Error al decodificar el token:', error);
+        alert('Sesión inválida. Inicia sesión nuevamente.');
+        window.location.href = 'index.html';
+    }
+});
 // Función para cargar los usuarios
 async function loadUsers() {
     const token = localStorage.getItem('authToken');
@@ -61,22 +83,23 @@ async function openModal(userId = null) {
     const modal = document.getElementById('userModal');
     const modalTitle = document.getElementById('modalTitle');
     const usernameField = document.getElementById('username');
+    const passwordContainer = document.querySelector('.password-container');  // ✅ Captura el contenedor en lugar del input directamente
     const passwordField = document.getElementById('password');
     const roleField = document.getElementById('role');
     const userForm = document.getElementById('userForm');
 
-    // Asegurarse de que el modal esté visible
     modal.classList.add('show');
     userForm.style.display = 'block';
 
     if (userId) {
-        // Editar Usuario
+        // Modo Edición
         modalTitle.textContent = 'Editar Usuario';
-        
-        // Ocultar campo y etiqueta de contraseña al editar
-        passwordField.style.display = 'none';
-        passwordField.previousElementSibling.style.display = 'none';
-        
+
+        // ✅ Asegurar que el passwordContainer existe antes de ocultarlo
+        if (passwordContainer) {
+            passwordContainer.style.display = 'none';  // ✅ Ocultamos todo el contenedor
+        }
+
         try {
             const token = localStorage.getItem('authToken');
             const response = await fetch(`${apiBaseUrl}/users/${userId}`, {
@@ -88,14 +111,14 @@ async function openModal(userId = null) {
             }
 
             const user = await response.json();
-            console.log("🔹 Cargando datos del usuario:", user); // Para depuración
+            console.log("🔹 Cargando datos del usuario:", user);
             usernameField.value = user.username || '';
             roleField.value = user.role || '';
 
         } catch (error) {
             console.error('Error al cargar usuario:', error);
             alert('Hubo un problema al cargar los datos del usuario.');
-            modal.classList.remove('show'); // Si hay error, cerrar el modal
+            modal.classList.remove('show');
         }
 
         userForm.onsubmit = async (e) => {
@@ -104,9 +127,14 @@ async function openModal(userId = null) {
         };
 
     } else {
-        // Crear Usuario
+        // Modo Creación
         modalTitle.textContent = 'Agregar Usuario';
-        passwordField.style.display = 'block'; // Mostrar contraseña
+
+        // ✅ Asegurar que el passwordContainer se muestre al crear un usuario
+        if (passwordContainer) {
+            passwordContainer.style.display = 'block';
+        }
+
         usernameField.value = '';
         passwordField.value = '';
         roleField.value = 'user';
@@ -134,18 +162,22 @@ async function createUser() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     const role = document.getElementById('role').value;
-     // Validaciones
+     // Validar usuario antes de continuar
+    if (!validateUsername(username)) return;
+    // Validaciones
      if (username === '') {
         alert('El campo "Usuario" no puede estar vacío.');
         return;
     }
 
-    if (password === '' || password.length < 6) {
-        alert('La contraseña debe tener al menos 6 caracteres.');
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+        alert('La contraseña debe tener al menos 8 caracteres, incluir una letra, un número y un símbolo especial.');
         return;
     }
 
-    if (role !== 'admin' && role !== 'user') {
+    if (role !== 'admin' && role !== 'user' && role !== 'developer') {
         alert('El rol seleccionado no es válido.');
         return;
     }
@@ -188,12 +220,12 @@ async function updateUser(userId) {
     console.log('Role:', role);
 
     // Validaciones
-    if (username === '') {
-        alert('El campo "Usuario" no puede estar vacío.');
+    // ✅ Aplicar validación de usuario ANTES de enviarlo al backend
+    if (!validateUsername(username)) {
         return;
     }
 
-    if (role !== 'admin' && role !== 'user') {
+    if (role !== 'admin' && role !== 'user' && role !== 'developer') {
         alert('El rol seleccionado no es válido.');
         return;
     }
@@ -250,11 +282,40 @@ async function deleteUser(userId) {
 }
 function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
-    notification.textContent = message;
-    notification.className = `notification show ${type === 'error' ? 'error' : ''}`;
-    setTimeout(() => {
-        notification.className = 'notification'; // Ocultar notificación
-    }, 3000);
+    notification.innerHTML = message;
+    notification.classList.add(type === 'error' ? 'error' : 'success');
+    notification.style.display = 'block';
+    setTimeout(() => notification.style.display = 'none', 3000);
+}
+function togglePassword(inputId, iconElement) {
+    const passwordField = document.getElementById(inputId);
+
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        iconElement.textContent = "🙈"; // Cambiar icono a "ocultar"
+    } else {
+        passwordField.type = "password";
+        iconElement.textContent = "👁️"; // Cambiar icono a "ver"
+    }
+}
+function validateUsername(username) {
+    // ✅ Expresión regular mejorada: Debe contener una letra, un guion bajo (_) y un número
+    const usernameRegex = /^(?=.*[a-zA-Z])(?=.*_)(?=.*\d)[a-zA-Z0-9_]{5,20}$/;
+
+    // Lista de nombres prohibidos
+    const forbiddenUsernames = ["admin", "root", "superuser", "test", "usuario"];
+
+    if (!usernameRegex.test(username)) {
+        alert("El usuario debe tener entre 5 y 20 caracteres, incluir al menos una letra, un guion bajo (_) y un número. Ejemplo: jose_1");
+        return false;
+    }
+
+    if (forbiddenUsernames.includes(username.toLowerCase())) {
+        alert("El nombre de usuario no está permitido. Usa otro.");
+        return false;
+    }
+
+    return true;
 }
 
 // Cargar usuarios al inicio
